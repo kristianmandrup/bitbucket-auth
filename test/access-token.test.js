@@ -69,7 +69,7 @@ async function credentialsProvider() {
   }
 }
 
-test('getTokens: credentialsProvider', async t => {
+test('getAccessToken: credentialsProvider', async t => {
   try {
     setEnvVars()
     mock()
@@ -83,5 +83,66 @@ test('getTokens: credentialsProvider', async t => {
     t.truthy(token)
   } catch (err) {
     t.fail(err.message)
+  }
+})
+
+const username = key
+const password = secret
+
+const credentials = {
+  username,
+  password
+}
+
+const consumerKey = key
+const consumerSecret = secret
+
+
+test('getTokens: username and password', async t => {
+  try {
+    setEnvVars()
+    mock()
+    let token = await getTokens({
+      username,
+      password,
+      consumerKey: process.env.bitbucketKey,
+      consumerSecret: process.env.bitbucketSecret,
+      logging: true
+    })
+    t.truthy(token)
+    t.pass('should work with username and password')
+  } catch (err) {
+    log(err)
+    t.fail('should not fail with username and password')
+  }
+})
+
+test('getTokens: refreshToken', async t => {
+  try {
+    setEnvVars()
+    mock()
+    let token = await getTokens({
+      refreshToken,
+      consumerKey: process.env.bitbucketKey,
+      consumerSecret: process.env.bitbucketSecret,
+      logging: true
+    })
+    t.truthy(token)
+    t.pass('should work with refreshToken')
+  } catch (err) {
+    log(err)
+    t.fail('should not fail with refreshToken')
+  }
+})
+
+test('getTokens: no credentials', async t => {
+  try {
+    setEnvVars()
+    mock()
+
+    await getTokens({})
+    t.fail('should not work without proper credentials')
+  } catch (err) {
+    t.pass('fails as expected without any credentials')
   }
 })

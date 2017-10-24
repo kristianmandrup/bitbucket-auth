@@ -15,6 +15,12 @@ function sendRequest(opts = {}) {
   } = opts
   const log = (logger || defaults.logger)('sendRequest', opts)
   domain = domain || 'bitbucket.org'
+  log({
+    domain,
+    consumerKey,
+    consumerSecret,
+    payload
+  })
   return new Promise(function (resolve, reject) {
     const uri = `https://${domain}/site/oauth2/access_token`
     const handlerOpts = Object.assign(opts, {
@@ -45,6 +51,7 @@ function createRequestHandler(opts = {}) {
     errorMessageOn401,
     logger
   } = opts
+  config = config || {}
   errorMessageOn401 = errorMessageOn401 || 'ERROR:'
   const log = (logger || defaults.logger)('requestHandler', opts)
 

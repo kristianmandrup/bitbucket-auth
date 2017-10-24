@@ -99,16 +99,11 @@ function getTokens(opts = {}) {
     username,
     password,
     refreshToken,
-    consumerKey,
-    consumerSecret,
-    domain,
-    configPath,
-    config,
-    logger,
-    saveConfig,
   } = opts
 
   const errorHandler = setErrorHandler('getTokens', opts)
+  const logger = opts.logger || defaults.logger
+  const log = logger('getTokens', opts)
 
   if (username) {
     payload = {
@@ -117,25 +112,30 @@ function getTokens(opts = {}) {
       password
     }
     errorMessageOn401 += ' Bad username/password?'
+    log('prepared for Basic auth', {
+      payload,
+      errorMessageOn401
+    })
   } else if (refreshToken) {
     payload = {
       grant_type: 'refresh_token',
       refresh_token: refreshToken
     }
     errorMessageOn401 += ' Bad refresh token?'
+    log('prepared for refresh token', {
+      payload,
+      errorMessageOn401
+    })
   } else {
     errorHandler('opts must specify either username and password, or refreshToken')
   }
+  const requestOpts = Object.assign(opts, {
+    errorMessageOn401,
+    payload
+  })
 
   // enable override of sendRequest
-  return (opts.sendRequest || sendRequest)({
-    domain,
-    payload,
-    config,
-    consumerKey,
-    consumerSecret,
-    errorMessageOn401
-  })
+  return (opts.sendRequest || sendRequest)(requestOpts)
 }
 
 function useRefreshToken(config) {
