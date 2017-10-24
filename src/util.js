@@ -1,3 +1,17 @@
+const required = [
+  'appName',
+  // 'consumerKey',
+  // 'consumerSecret'
+]
+
+const stringProps = [
+  'appName',
+  'consumerKey',
+  'consumerSecret',
+  'refreshToken',
+  'configPath'
+]
+
 // default error handler
 const defaults = {
   errorHandler(msg, value) {
@@ -9,35 +23,30 @@ const defaults = {
   }
 }
 
-function populateDefaults(opts) {
-  opts.consumerKey = opts.consumerKey || process.env.bitbucketKey
-  opts.consumerSecret = opts.consumerSecret || process.env.bitbucketSecret
-  return opts
-}
-
 let errorHandler = defaults.errorHandler
 
 function setErrorHandler(opts = {}) {
   return opts.errorHandler || defaults.errorHandler
 }
 
-function missing(name) {
+function missing(method, name) {
   errorHandler(`${method}: missing ${name}`)
 }
 
-const required = [
-  'appName',
+const secretKeys = [
   'consumerKey',
   'consumerSecret'
 ]
 
-const stringProps = [
-  'appName',
-  'consumerKey',
-  'consumerSecret',
-  'refreshToken',
-  'configPath'
-]
+function populateDefaults(opts = {}) {
+  opts.consumerKey = opts.consumerKey || process.env.bitbucketKey
+  opts.consumerSecret = opts.consumerSecret || process.env.bitbucketSecret
+
+  secretKeys.map(key => {
+    if (!opts[key]) missing('populateDefaults', key)
+  })
+  return opts
+}
 
 function typeError(name, type, actualType) {
   errorHandler(`${method}: ${name} must be of type ${type}, was: ${actualType}`)
@@ -51,14 +60,17 @@ function createValidator(method) {
 
     stringProps.map(name => {
       let value = opts[name]
+      if (!value) return
       let type = typeof value
       if (type !== 'string') typeError(method, name, 'string', type)
     })
+    return true
   }
 }
 
 module.exports = {
   errorHandler,
   createValidator,
-  defaults
+  defaults,
+  populateDefaults
 }
