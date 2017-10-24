@@ -2,7 +2,8 @@ let {
   errorHandler,
   createValidator,
   defaults,
-  populateDefaults
+  populateDefaults,
+  setErrorHandler
 } = require('./util')
 
 const {
@@ -27,10 +28,12 @@ const {
 function getAccessToken(opts = {}) {
   errorHandler = setErrorHandler(opts)
   opts = populateDefaults(opts)
-  createValidator('getAccessToken')
-    .validateOpts(opts)
+  const validate = createValidator('getAccessToken')
+  validate(opts)
+
   const {
-    loadConfig
+    loadConfig,
+    configPath
   } = opts
   const logger = opts.logger || defaults.logger
   const log = logger('getAccessToken', opts)
@@ -56,7 +59,7 @@ function getAccessToken(opts = {}) {
   }
   useRefreshToken = opts.useRefreshToken || useRefreshToken
 
-  if (useRefreshToken()) {
+  if (useRefreshToken(config)) {
     opts.refreshToken = refreshToken
     return getTokens(opts)
   } else if (credentialsProvider) {
@@ -129,5 +132,6 @@ function getTokens(opts = {}) {
 }
 
 module.exports = {
-  getAccessToken
+  getAccessToken,
+  getTokens
 }

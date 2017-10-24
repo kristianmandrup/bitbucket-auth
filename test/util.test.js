@@ -5,27 +5,10 @@ import {
   createValidator
 } from '../src/util'
 
-const secret = 'xyz'
-const key = '123abc'
-
-let opts = {
-  valid: {
-    appName: 'my-name',
-    consumerSecret: secret,
-    consumerKey: key,
-  },
-  missing: {
-    appName: 'my-name'
-  },
-  invalid: {
-    appName: 'my-name',
-    consumerSecret: 32
-  }
-}
-
-const {
+import {
+  opts,
   log
-} = console
+} from './_common'
 
 test('populateDefaults: missing secrets', t => {
   t.throws(x => populateDefaults(opts.missing))
@@ -33,11 +16,11 @@ test('populateDefaults: missing secrets', t => {
 
 test('populateDefaults: env vars', t => {
   // single ENV var set not enough
-  process.env.bitbucketKey = 'xyz'
+  process.env.bitbucketKey = key
   t.throws(x => populateDefaults(opts.missing))
 
   // both ENV vars set
-  process.env.bitbucketSecret = '123abc'
+  process.env.bitbucketSecret = secret
   t.notThrows(x => populateDefaults(opts.missing))
   let newOpts = populateDefaults(opts.missing)
   t.truthy(typeof newOpts === 'object')

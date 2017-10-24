@@ -75,6 +75,7 @@ function createValidator(method) {
 
 module.exports = {
   errorHandler,
+  setErrorHandler,
   createValidator,
   defaults,
   populateDefaults
