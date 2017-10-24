@@ -1,4 +1,3 @@
-const request = require('superagent')
 let {
   errorHandler,
   createValidator,
@@ -34,22 +33,30 @@ function getAccessToken(opts = {}) {
     loadConfig
   } = opts
   const logger = opts.logger || defaults.logger
+  const log = logger('getAccessToken', opts)
 
   let config = loadConfig ? loadConfig(opts) : {}
   opts = Object.assign({}, {
     configPath,
     config,
     logger,
-    domain: 'bitbucket.org'
+    domain: defaults.domain
   }, opts)
 
   const {
-    refreshToken,
-    forceCredentials,
     credentialsProvider
   } = config
 
-  if (refreshToken && !forceCredentials) {
+  function useRefreshToken(config) {
+    const {
+      refreshToken,
+      forceCredentials
+    } = config
+    return refreshToken && !forceCredentials
+  }
+  useRefreshToken = opts.useRefreshToken || useRefreshToken
+
+  if (useRefreshToken()) {
     opts.refreshToken = refreshToken
     return getTokens(opts)
   } else if (credentialsProvider) {

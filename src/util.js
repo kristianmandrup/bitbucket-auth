@@ -14,12 +14,17 @@ const stringProps = [
 
 // default error handler
 const defaults = {
+  domain: 'bitbucket.org',
   errorHandler(msg, value) {
     console.error(msg, value)
     throw new Error(msg)
   },
-  logger(...msgs) {
-    console.log(...msgs)
+  logger(method, opts = {}) {
+    return function (...msgs) {
+      if (opts.logging) {
+        console.log(...msgs)
+      }
+    }
   }
 }
 

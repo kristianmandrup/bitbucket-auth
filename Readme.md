@@ -36,6 +36,21 @@ const accessToken = await getAccessToken({
 })
 ```
 
+You can pass a `useRefreshToken(config)` function as an option to fine-control when to use the `refreshToken` instead of making a full credentials request.
+
+By default pass a `forceCredentials: true` option to force a full credentials request.
+
+## Logging/debugging
+
+You can pass a custom `logger` to log/debug the internals. To enable logging/debugging,
+ set the `logging: true` option (will fall back to use a default `logger`)
+
+```js
+const accessToken = await getAccessToken({
+  logger: myLogger
+  logging: true
+})
+```
 ## Customization of request
 
 You can customize the way the request is sent and handled by providing your own functions as options:
@@ -43,12 +58,18 @@ You can customize the way the request is sent and handled by providing your own 
 - `sendRequest(opts)`
 - `createRequestHandler(opts)`
 
-See the default implementations in `src/request.js` for further details/requirements.
+You can also supply any of the following methods to further refine/customize your request flow as needed
 
+- `isSuccess(res)`
+- `isUnauthorized(res)`
+- `handleError(opts)`
+- `handleSuccess(opts)`
+
+See the default implementations in `src/request.js` for customization details/ requirements.
 ## Token storage
 
 To enable token storage, you need to supply `loadConfig` and `saveConfig` functions.
-See [Token-storage](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Token-storage.md) for more details.
+See [Token-storage](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Token-storage.md) for more details and examples using a `.json` file.
 
 ```js
 function loadConfig(opts = {}) {
@@ -143,7 +164,7 @@ bitbucketAuth.getAccessToken(config)
 
 ## Contributors
 
-Note: original version by [@tpettersen](https://www.npmjs.com/package/bitbucket-auth-token))
+Note: original version by [@tpettersen](https://www.npmjs.com/package/bitbucket-auth-token)
 
 ## License
 
