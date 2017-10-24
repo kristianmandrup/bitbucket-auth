@@ -1,0 +1,63 @@
+{
+  "name": "bitbucket-auth",
+  "version": "0.5.0",
+  "description": "Bitbucket API OAuth2 token authentication and storage",
+  "author": "Kristian Mandrup <kmandrup@gmail.com>",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "nyc ava",
+    "build:prod": "webpack --progress --colors --display-error-details --env=prod",
+    "build:dev": "webpack --progress --colors --display-error-details --env=dev",
+    "build": "npm run build:dev && npm run build:prod"
+  },
+  "keywords": [
+    "bitbucket",
+    "api",
+    "auth",
+    "token",
+    "oauth",
+    "oauth2"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/kristianmandrup/bitbucket-auth.git"
+  },
+  "engine": [
+    "node >=6.0.0"
+  ],
+  "dependencies": {
+    "supertest": "^3.0.0"
+  },
+  "devDependencies": {
+    "ava": "^0.22.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2017": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babili": "^0.1.4",
+    "babili-webpack-plugin": "^0.1.2",
+    "nock": "^9.0.22",
+    "nyc": "^11.2.1",
+    "webpack": "^3.8.1",
+    "webpack-merge": "^4.1.0"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.js"
+    ],
+    "concurrency": 1,
+    "failFast": true,
+    "failWithoutAssertions": false,
+    "tap": true,
+    "powerAssert": false,
+    "require": [
+      "babel-register",
+      "babel-polyfill"
+    ],
+    "babel": "inherit"
+  },
+  "license": "MIT"
+}
