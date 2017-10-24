@@ -13,9 +13,24 @@ const config = {
   refresh_token
 }
 
+const username = 'bitbucket-user'
+const password = 'xxxxyyyy-secret'
+
 function setEnvVars() {
   process.env.bitbucketKey = key
   process.env.bitbucketSecret = secret
+
+  process.env.bitbucketUsername = username
+  process.env.bitbucketPassword = password
+}
+
+// for Basic auth access
+// use username/password of bitbucket user account
+async function basicAuth(config = {}) {
+  return config.credentials || {
+    username: process.env.bitbucketUsername,
+    password: process.env.bitbucketPassword
+  }
 }
 
 let opts = {
@@ -80,5 +95,6 @@ export {
   accessToken,
   successBody,
   successResult,
-  setEnvVars
+  setEnvVars,
+  basicAuth
 }

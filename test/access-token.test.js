@@ -8,7 +8,8 @@ import {
   key,
   secret,
   refreshToken,
-  setEnvVars
+  setEnvVars,
+  basicAuth
 } from './_common'
 
 import {
@@ -63,19 +64,13 @@ test('getAccessToken: refresh token', async t => {
   }
 })
 
-async function credentialsProvider() {
-  return {
-    refreshToken
-  }
-}
-
 test('getAccessToken: credentialsProvider', async t => {
   try {
     setEnvVars()
     mock()
     let token = await getAccessToken({
       appName: 'my-app',
-      credentialsProvider
+      credentialsProvider: basicAuth
     })
     // log('received token:', {
     //   token

@@ -6,7 +6,7 @@ You can supply a `loadConfig` function that loads configuration as you see fit, 
 const homeDir = require('home-dir')
 const jsonfile = require('jsonfile')
 
-loadConfig(opts) {
+function loadConfig(opts) {
   // set default path for storing config
   const configPath = homeDir('/.' + opts.appName)
   let config
@@ -22,7 +22,7 @@ loadConfig(opts) {
 If you supply a `loadConfig` function you would normally provide a `saveConfig` method as well.
 
 ```js
-saveConfig(newConfig, opts = {}) {
+function saveConfig(newConfig, opts = {}) {
   const { configPath, username, logger } = opts
   jsonfile.writeFile(configPath, newConfig, {
     mode: 600
