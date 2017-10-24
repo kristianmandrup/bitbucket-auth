@@ -2,3 +2,4 @@ node_modules
 test
 webpack
 docs
+test/secret/access-tokens.json

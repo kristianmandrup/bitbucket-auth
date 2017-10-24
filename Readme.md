@@ -2,6 +2,8 @@
 
 Bitbucket API OAuth2 token authentication and storage.
 
+See [Advanced-auth](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Advanced-auth.md) for more info on bitbucket API authentication.
+
 ## Example
 
 To get an access token, call `getAccessToken`
