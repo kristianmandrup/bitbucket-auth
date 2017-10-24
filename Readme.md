@@ -1,5 +1,7 @@
 # Access Token authentication
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kristianmandrup/bitbucket-auth.svg)](https://greenkeeper.io/)
+
 Bitbucket API OAuth2 token authentication and storage.
 
 ## Example
