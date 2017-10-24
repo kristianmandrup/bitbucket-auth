@@ -166,7 +166,7 @@ bitbucketAuth.getAccessToken(config)
 
 ## Contributors
 
-Note: original version by [@tpettersen](https://www.npmjs.com/package/bitbucket-auth-token)
+Original version was written by [@tpettersen](https://www.npmjs.com/package/bitbucket-auth-token)
 
 ## License
 
