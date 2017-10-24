@@ -39,7 +39,6 @@ function sendRequest(opts = {}) {
 
 function createRequestHandler(opts = {}) {
   let {
-    saveConfig,
     config,
     resolve,
     reject,
@@ -49,57 +48,9 @@ function createRequestHandler(opts = {}) {
   errorMessageOn401 = errorMessageOn401 || 'ERROR:'
   const log = (logger || defaults.logger)('requestHandler', opts)
 
-  function isSuccess(res) {
-    return res && res.ok
-  }
   isSuccess = opts.isSuccess || isSuccess
-
-  function isUnauthorized(res) {
-    res && res.status === 401
-  }
   isUnauthorized = opts.isUnauthorized || isUnauthorized
-
-  function handleError(opts = {}) {
-    let {
-      res,
-      err,
-      errorMessageOn401,
-      reject
-    } = opts
-
-    var errorMessage
-    log({
-      res,
-      err
-    })
-    if (isUnauthorized(res)) {
-      errorMessage = errorMessageOn401
-    } else if (err) {
-      errorMessage = err
-    } else {
-      errorMessage = res.text
-    }
-    reject(errorMessage)
-  }
   handleError = opts.handleError || handleError
-
-  function handleSuccess(opts = {}) {
-    let {
-      res,
-      err,
-      config,
-      body,
-      resolve
-    } = opts
-
-    var newConfig = Object.assign(config, {
-      refreshToken: body.refresh_token
-    })
-    if (saveConfig) {
-      saveConfig(newConfig, opts)
-    }
-    resolve(body.access_token)
-  }
   handleSuccess = opts.handleSuccess || handleSuccess
 
   return function (err, res) {
@@ -126,6 +77,60 @@ function createRequestHandler(opts = {}) {
     }
   }
 }
+
+function isSuccess(res) {
+  return res && res.ok
+}
+
+function isUnauthorized(res) {
+  res && res.status === 401
+}
+
+function handleError(opts = {}) {
+  let {
+    res,
+    err,
+    errorMessageOn401,
+    reject,
+    logger
+  } = opts
+
+  const log = (logger || defaults.logger)('handleError', opts)
+  let errorMessage
+  log({
+    res,
+    err
+  })
+  if (isUnauthorized(res)) {
+    errorMessage = errorMessageOn401
+  } else if (err) {
+    errorMessage = err
+  } else {
+    errorMessage = res.text
+  }
+  reject(errorMessage)
+}
+
+function handleSuccess(opts = {}) {
+  let {
+    res,
+    err,
+    config,
+    body,
+    resolve,
+    saveConfig,
+    logger
+  } = opts
+  const log = (logger || defaults.logger)('handleSuccess', opts)
+  var newConfig = Object.assign(config, {
+    refreshToken: body.refresh_token
+  })
+  if (saveConfig) {
+    saveConfig(newConfig, opts)
+  }
+  resolve(body.access_token)
+}
+
 
 module.exports = {
   sendRequest,

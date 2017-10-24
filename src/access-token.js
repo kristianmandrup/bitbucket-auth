@@ -26,7 +26,7 @@ const {
  * @param {Function} errorHandler To handle any error (optional)
  */
 function getAccessToken(opts = {}) {
-  errorHandler = setErrorHandler(opts)
+  errorHandler = setErrorHandler('getAccessToken', opts)
   opts = populateDefaults(opts)
   const validate = createValidator('getAccessToken')
   validate(opts)
@@ -46,30 +46,36 @@ function getAccessToken(opts = {}) {
     domain: defaults.domain
   }, opts)
 
-  const {
-    credentialsProvider
+  let {
+    credentialsProvider,
+    refreshToken
   } = config
 
-  function useRefreshToken(config) {
-    const {
-      refreshToken,
-      forceCredentials
-    } = config
-    return refreshToken && !forceCredentials
-  }
+  credentialsProvider = credentialsProvider || opts.credentialsProvider
+  refreshToken = refreshToken || opts.refreshToken
   useRefreshToken = opts.useRefreshToken || useRefreshToken
-
-  if (useRefreshToken(config)) {
+  log({
+    refreshToken,
+    credentialsProvider
+  })
+  if (useRefreshToken({
+      refreshToken,
+      credentialsProvider
+    })) {
     opts.refreshToken = refreshToken
     return getTokens(opts)
-  } else if (credentialsProvider) {
+  }
+
+  if (credentialsProvider) {
     return credentialsProvider().then(function (credentials) {
       opts = Object.assign(opts, credentials)
       return getTokens(opts)
     })
-  } else {
-    errorHandler('opts must specify a credentialsProvider')
   }
+  // fall back
+  errorHandler('opts must specify a credentialsProvider or a refreshToken', {
+    opts
+  })
 }
 
 /**
@@ -102,6 +108,8 @@ function getTokens(opts = {}) {
     saveConfig,
   } = opts
 
+  const errorHandler = setErrorHandler('getTokens', opts)
+
   if (username) {
     payload = {
       grant_type: 'password',
@@ -112,7 +120,7 @@ function getTokens(opts = {}) {
   } else if (refreshToken) {
     payload = {
       grant_type: 'refresh_token',
-      refresh_token
+      refresh_token: refreshToken
     }
     errorMessageOn401 += ' Bad refresh token?'
   } else {
@@ -121,7 +129,6 @@ function getTokens(opts = {}) {
 
   // enable override of sendRequest
   return (opts.sendRequest || sendRequest)({
-    uri,
     domain,
     payload,
     config,
@@ -131,7 +138,16 @@ function getTokens(opts = {}) {
   })
 }
 
+function useRefreshToken(config) {
+  const {
+    refreshToken,
+    forceCredentials
+  } = config
+  return refreshToken && !forceCredentials
+}
+
 module.exports = {
   getAccessToken,
-  getTokens
+  getTokens,
+  useRefreshToken
 }

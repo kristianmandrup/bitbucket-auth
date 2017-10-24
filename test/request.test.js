@@ -11,7 +11,7 @@ import {
   opts,
   accessToken,
   successResult
-} from './common'
+} from './_common'
 
 import {
   mock
