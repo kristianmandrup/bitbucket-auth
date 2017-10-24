@@ -1,21 +1,10 @@
-const required = [
-  'appName',
-  // 'consumerKey',
-  // 'consumerSecret'
-]
+const {
+  required,
+  stringProps
+} = require('./properties')
 
-const stringProps = [
-  'appName',
-  'consumerKey',
-  'consumerSecret',
-  'refreshToken',
-  'configPath'
-]
-
-// default error handler
 const defaults = {
   domain: 'bitbucket.org',
-  // TODO: return function similar to logger
   errorHandler(method, opts = {}) {
     return function (msg, value) {
       if (opts.logging) {
@@ -81,6 +70,7 @@ function createValidator(method) {
 module.exports = {
   errorHandler,
   setErrorHandler,
+  typeError,
   createValidator,
   defaults,
   populateDefaults

@@ -107,7 +107,7 @@ test('getTokens: username and password', async t => {
       password,
       consumerKey: process.env.bitbucketKey,
       consumerSecret: process.env.bitbucketSecret,
-      logging: true
+      // logging: true
     })
     t.truthy(token)
     t.pass('should work with username and password')
@@ -125,7 +125,7 @@ test('getTokens: refreshToken', async t => {
       refreshToken,
       consumerKey: process.env.bitbucketKey,
       consumerSecret: process.env.bitbucketSecret,
-      logging: true
+      // logging: true
     })
     t.truthy(token)
     t.pass('should work with refreshToken')

@@ -140,6 +140,10 @@ function handleSuccess(opts = {}) {
 
 
 module.exports = {
-  sendRequest,
-  createRequestHandler
+  isSuccess,
+  isUnauthorized,
+  handleError,
+  handleSuccess,
+  createRequestHandler,
+  sendRequest
 }
