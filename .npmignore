@@ -1,5 +1,5 @@
 node_modules
-test
+test/specs
 webpack
 docs
 test/secret/access-tokens.json

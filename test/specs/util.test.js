@@ -3,12 +3,12 @@ import test from 'ava'
 import {
   populateDefaults,
   createValidator
-} from '../src/util'
+} from '../../src/util'
 
 import {
   opts,
   log
-} from './_common'
+} from '../_common'
 
 test('populateDefaults: missing secrets', t => {
   t.throws(x => populateDefaults(opts.missing))

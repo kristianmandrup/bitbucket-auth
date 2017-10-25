@@ -1,7 +1,7 @@
 import test from 'ava'
 import {
   mock
-} from './_mock'
+} from '../_mock'
 
 import {
   log,
@@ -10,13 +10,13 @@ import {
   refreshToken,
   setEnvVars,
   basicAuth
-} from './_common'
+} from '../_common'
 
 import {
   getAccessToken,
   getTokens,
   useRefreshToken
-} from '../src/access-token'
+} from '../../src/access-token'
 
 test('getAccessToken: no credentials', async t => {
   try {

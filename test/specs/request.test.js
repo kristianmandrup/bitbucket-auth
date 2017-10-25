@@ -3,7 +3,7 @@ import test from 'ava'
 import {
   sendRequest,
   createRequestHandler
-} from '../src/request'
+} from '../../src/request'
 
 import {
   log,
@@ -11,11 +11,11 @@ import {
   opts,
   accessToken,
   successResult
-} from './_common'
+} from '../_common'
 
 import {
   mock
-} from './_mock'
+} from '../_mock'
 
 test('sendRequest', async t => {
   // mock post request/response with access code in result body

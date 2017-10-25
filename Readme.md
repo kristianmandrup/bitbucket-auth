@@ -148,6 +148,38 @@ Test are written and run using [ava](https://github.com/avajs/ava)
 
 `$ npm test`
 
+You can reuse the test infrastruture in `_common.js` and `_mock.js` in your own projects:
+
+```js
+import {
+  mock,
+  setEnvVars,
+  basicAuth
+} from 'bitbucket-auth/test'
+
+// import pre-defined option sets for testing
+import {
+  opts
+} from 'bitbucket-auth/test/_common'
+```
+
+Sample bitbucket auth test case in your own project:
+
+```js
+test('send request', async t => {
+  try {
+    mock()
+    setEnvVars()
+
+    let result = await sendRequest(opts.valid)
+    t.truthy(result)
+    t.is(result, accessToken)
+  } catch (err) {
+    log(err)
+  }
+})
+```
+
 ## Packaging
 
 To build a bundle (ie. for `dev` and `prod`):
