@@ -126,13 +126,15 @@ function handleSuccess(opts = {}) {
     body,
     resolve,
     saveConfig,
+    storage,
     logger
   } = opts
+  storage = storage || {}
   const log = (logger || defaults.logger)('handleSuccess', opts)
   var newConfig = Object.assign(config, {
     refreshToken: body.refresh_token
   })
-  const saveToStorage = storage.saveConfig.bind(storage) || saveConfig
+  const saveToStorage = saveConfig || storage.saveConfig ? storage.saveConfig.bind(storage) : null
 
   if (saveToStorage) {
     saveToStorage(newConfig, opts)

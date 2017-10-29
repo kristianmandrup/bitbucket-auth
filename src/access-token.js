@@ -31,15 +31,16 @@ function getAccessToken(opts = {}) {
   const validate = createValidator('getAccessToken')
   validate(opts)
 
-  const {
+  let {
     loadConfig,
     storage,
     configPath
   } = opts
+  storage = storage || {}
   const logger = opts.logger || defaults.logger
   const log = logger('getAccessToken', opts)
 
-  const loadFromStorage = storage.loadConfig.bind(storage) || loadConfig
+  const loadFromStorage = loadConfig || storage.loadConfig ? storage.loadConfig.bind(storage) : null
   let config = loadFromStorage ? loadFromStorage(opts) : {}
   opts = Object.assign({}, {
     configPath,
