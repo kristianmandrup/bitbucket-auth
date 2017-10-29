@@ -38,6 +38,12 @@ const accessToken = await getAccessToken({
 })
 ```
 
+Note that you may also pass your bitbucket `username` and `password` to get same token access rights as your user account. This is not recommended except for testing purposes.
+
+You must pass a `credentialsProvider` function which provides the user credentials (ie. `username` and `password`) which should be the key/secret for the registered bitbucket client app that is making the access request.
+
+## Fine control
+
 You can pass a `useRefreshToken(config)` function as an option to fine-control when to use the `refreshToken` instead of making a full credentials request.
 
 By default pass a `forceCredentials: true` option to force a full credentials request.
@@ -83,6 +89,22 @@ function saveConfig(config, opts = {}) {
   // ...
 }
 ```
+
+You an also opt to pass a `storage` object with `loadConfig` and `saveConfig` methods.
+
+```js
+import { createFileStorage } from 'bitbucket-auth/storage'
+
+const storage = createFileStorage({
+  logging: true
+})
+const accessToken = await getAccessToken({
+  appName: 'my-app',
+  storage
+})
+```
+
+A simple filestorage is made available in `/storage` for your convenience, which requires `homeDir` and `fs-extra` as (minimal) dependencies.
 
 ## Bitbucket API v2
 

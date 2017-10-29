@@ -33,12 +33,14 @@ function getAccessToken(opts = {}) {
 
   const {
     loadConfig,
+    storage,
     configPath
   } = opts
   const logger = opts.logger || defaults.logger
   const log = logger('getAccessToken', opts)
 
-  let config = loadConfig ? loadConfig(opts) : {}
+  const loadFromStorage = storage.loadConfig.bind(storage) || loadConfig
+  let config = loadFromStorage ? loadFromStorage(opts) : {}
   opts = Object.assign({}, {
     configPath,
     config,

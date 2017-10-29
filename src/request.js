@@ -132,8 +132,10 @@ function handleSuccess(opts = {}) {
   var newConfig = Object.assign(config, {
     refreshToken: body.refresh_token
   })
-  if (saveConfig) {
-    saveConfig(newConfig, opts)
+  const saveToStorage = storage.saveConfig.bind(storage) || saveConfig
+
+  if (saveToStorage) {
+    saveToStorage(newConfig, opts)
   }
   resolve(body.access_token)
 }
