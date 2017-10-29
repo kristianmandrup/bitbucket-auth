@@ -19,17 +19,14 @@ const password = 'xxxxyyyy-secret'
 function setEnvVars() {
   process.env.bitbucketKey = key
   process.env.bitbucketSecret = secret
-
-  process.env.bitbucketUsername = username
-  process.env.bitbucketPassword = password
 }
 
 // for Basic auth access
 // use username/password of bitbucket user account
 async function basicAuth(config = {}) {
   return config.credentials || {
-    username: process.env.bitbucketUsername,
-    password: process.env.bitbucketPassword
+    username: process.env.bitbucketKey,
+    password: process.env.bitbucketSecret
   }
 }
 

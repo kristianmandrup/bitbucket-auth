@@ -28,7 +28,7 @@ const api = createBitbucketAPI(accessToken)
 
 `getAccessToken` will try to read the `consumerKey` and `consumerSecret` from the above listed environment variables if they are not passed as arguments.
 
-If you follow this best practice (ie. storing key and secret in these specific ENV variables), you can simplify to:
+If you follow this best practice (ie. storing key and secret in these specific `ENV` variables), you can simplify to:
 
 ```js
 const accessToken = await getAccessToken({
@@ -38,9 +38,13 @@ const accessToken = await getAccessToken({
 })
 ```
 
-Note that you may also pass your bitbucket `username` and `password` to get same token access rights as your user account. This is not recommended except for testing purposes.
+Note that you must pass a `credentialsProvider` function which provides the user credentials for Basic Auth (ie. `username` and `password`). The credentials  consist of the `key` and `secret` for the registered bitbucket client app (ie. the app that is requesting access and must be pre-registered as a valid client app on bitbucket OAuth settings.
 
-You must pass a `credentialsProvider` function which provides the user credentials (ie. `username` and `password`) which should be the key/secret for the registered bitbucket client app that is making the access request.
+## How OAuth authorization works
+
+The authorization request communicates with the bitbucket authorization server, which acts as a "middle man" between the client app and the bitbucket resource server.
+
+The bitbucket authorization server manages and provides access to bitbucket API by granting the client an access token. The token which provides access to a limited scope of actions as defined for the particular app.
 
 ## Fine control
 
