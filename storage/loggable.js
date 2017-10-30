@@ -20,4 +20,8 @@ module.exports = class Loggable {
     this.error(err, data)
     throw err
   }
+
+  notYetImplemented(method, ...msgs) {
+    this.handleError(`${method} not yet implemented:`, ...msgs)
+  }
 }

@@ -148,8 +148,16 @@ app.get('/authenticated', (request, response) => {
   getAccessToken({
     appName: 'my-app',
     storage
-  }).then(({accessToken, refreshToken}) => {
-    // return accessToken to web app for use (and perhaps storage in localstorage)
+  }).then((result) => {
+    const {
+      refresh_token,
+      access_token,
+      expires_in,
+      token_type
+    } = result
+
+    // return accessToken to web app for use
+    // perhaps store token in browser localstorage for typical JWT flow
   }).error(err => {
     // accessToken likely expired
     // use refreshToken to request a fresh accessToken

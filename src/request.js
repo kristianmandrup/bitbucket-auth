@@ -133,8 +133,17 @@ function handleSuccess(opts = {}) {
   const log = (logger || defaults.logger)('handleSuccess', opts)
   const {
     refresh_token,
-    access_token
+    access_token,
+    expires_in,
+    token_type
   } = body
+  const accessResponsePayload = {
+    refresh_token,
+    access_token,
+    expires_in,
+    token_type
+  }
+
   var newConfig = Object.assign(config, {
     refreshToken: body.refresh_token
   })
@@ -143,10 +152,7 @@ function handleSuccess(opts = {}) {
   if (saveToStorage) {
     saveToStorage(newConfig, opts)
   }
-  resolve({
-    access_token,
-    refresh_token
-  })
+  resolve(accessResponsePayload)
 }
 
 

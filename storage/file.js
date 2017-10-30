@@ -1,4 +1,6 @@
-import Loggable from './loggable'
+import {
+  BaseStorage
+} from './base'
 import {
   promisify
 } from 'util'
@@ -10,7 +12,7 @@ export function createFileStorage(opts) {
   return new FileStorage(opts)
 }
 
-export class FileStorage extends Loggable {
+export class FileStorage extends BaseStorage {
   constructor(opts) {
     super(opts)
     this.writeFile = opts.writeFile || promisify(fsx.writeJson)
