@@ -127,6 +127,8 @@ A simple filestorage is made available in `/storage` for your convenience., whic
 
 A sample client express app can be found in the `/client/app` folder and be used as a baseline to build on.
 
+Note that this client app is WIP and has not yet been tested. Please help make it better!
+
 ```js
 // handle bitbucket authorization callback by authorization server
 app.get('/authenticated', (request, response) => {
@@ -146,13 +148,16 @@ app.get('/authenticated', (request, response) => {
   getAccessToken({
     appName: 'my-app',
     storage
-  }).then(accessToken => {
-    response.end(accessToken)
+  }).then(({accessToken, refreshToken}) => {
+    // return accessToken to web app for use (and perhaps storage in localstorage)
+  }).error(err => {
+    // accessToken likely expired
+    // use refreshToken to request a fresh accessToken
   })
 })
 ```
 
-A full sample client for OAuth2 can be found in `/client/sample.js` (from the awesome book [OAuth2 in Action](https://www.manning.com/books/oauth-2-in-action).
+A full (generic) sample client for OAuth2 can be found in `/client/sample.js` (from the awesome book [OAuth2 in Action](https://www.manning.com/books/oauth-2-in-action).
 
 ## Bitbucket API v2
 

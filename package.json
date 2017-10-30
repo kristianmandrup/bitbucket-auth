@@ -1,6 +1,6 @@
 {
   "name": "bitbucket-auth",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Bitbucket API OAuth2 token authentication and storage",
   "author": "Kristian Mandrup <kmandrup@gmail.com>",
   "main": "src/index.js",
