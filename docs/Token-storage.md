@@ -1,17 +1,36 @@
 # Token storage
 
-You can supply a `loadConfig` function that loads configuration as you see fit, such as from `localstorage` (in browser client) or from a `.json` file on the server.
+You can supply a `loadConfig` function that loads configuration from a storage:
+
+- from a `.json` file
+- from a database
+- ...
+
+A sample `FileStorage` class is provided in the `/auth` folder of this package.
+You can pass a `storage` object with `loadConfig` and `saveConfig` methods.
 
 ```js
-const homeDir = require('home-dir')
-const jsonfile = require('jsonfile')
+import { createFileStorage } from 'bitbucket-auth/storage'
 
-function loadConfig(opts) {
+const storage = createFileStorage({
+  logging: true
+})
+const accessToken = await getAccessToken({
+  appName: 'my-app',
+  storage
+})
+```
+
+## loadConfig
+
+```js
+async loadConfig(opts = {}) {
+  opts = opts || this.opts
+  let configPath = this.configPath(opts)
   // set default path for storing config
-  const configPath = homeDir('/.' + opts.appName)
   let config
   try {
-    config = jsonfile.readFileSync(configPath)
+    config = await this.readFile(configPath, this.readOpts)
   } catch (e) {
     config = {}
   }
@@ -21,16 +40,21 @@ function loadConfig(opts) {
 
 If you supply a `loadConfig` function you would normally provide a `saveConfig` method as well.
 
+## saveConfig
+
 ```js
-function saveConfig(newConfig, opts = {}) {
-  const { configPath, username, logger } = opts
-  jsonfile.writeFile(configPath, newConfig, {
-    mode: 600
-  }, function () {
-    // log a message if we're using the password flow to retrieve a token
-    if (username) {
-      logger('storing auth token in ' + configPath)
-    }
-  })
+async saveConfig(newConfig, opts = {}) {
+  opts = opts || this.opts
+  let configPath = this.configPath(opts)
+  let {
+    username
+  } = opts
+  let written = await this.writeFile(configPath, newConfig, this.writeOpts)
+  // log a message if we're using the password flow to retrieve a token
+  if (username) {
+    this.log(`stored auth config in ${configPath}`, {
+      username
+    })
+  }
 }
 ```

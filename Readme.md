@@ -4,6 +4,17 @@ Bitbucket API OAuth2 token authentication and storage.
 
 See [Advanced-auth](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Advanced-auth.md) for more info on bitbucket API authentication.
 
+## Additional OAuth2 Resources
+
+These resources will provide a much deeper understanding of all the mechanics behind the OAuth2 flow:
+
+- Book: [OAuth2 in Action](https://www.manning.com/books/oauth-2-in-action)
+- [Auth flow](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Auth-flow.md)
+- [Auth flow steps](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Flow-steps.md)
+- [Extra-protection](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Extra-protection.md)
+
+I highly recommend buying and reading the book, but these resources will (hopefully) get you started. Also check out the sample client apps (see below)
+
 ## Example
 
 To get an access token, call `getAccessToken`
@@ -108,7 +119,40 @@ const accessToken = await getAccessToken({
 })
 ```
 
-A simple filestorage is made available in `/storage` for your convenience, which requires `homeDir` and `fs-extra` as (minimal) dependencies.
+### Storage
+
+A simple filestorage is made available in `/storage` for your convenience., which requires `homeDir` and `fs-extra` as (minimal) dependencies.
+
+### Client app (server)
+
+A sample client express app can be found in the `/client/app` folder and be used as a baseline to build on.
+
+```js
+// handle bitbucket authorization callback by authorization server
+app.get('/authenticated', (request, response) => {
+  const {
+    query
+  } = request
+  const {
+    code
+  } = query
+  log('authenticated', {
+    query,
+    code
+  })
+
+  // Make a HTTP form encoded request and authenticate client using HTTP Basic Auth
+  // Can be done using getAccessToken()
+  getAccessToken({
+    appName: 'my-app',
+    storage
+  }).then(accessToken => {
+    response.end(accessToken)
+  })
+})
+```
+
+A full sample client for OAuth2 can be found in `/client/sample.js` (from the awesome book [OAuth2 in Action](https://www.manning.com/books/oauth-2-in-action).
 
 ## Bitbucket API v2
 

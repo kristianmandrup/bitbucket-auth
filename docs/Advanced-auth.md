@@ -2,11 +2,16 @@
 
 Bitbucket uses an Access Token for authentication, using the `OAuth2` protocols
 
-The client app needs to request the Access Token from the server, which has an expiration period.
-
-Access tokens expire in *one hour*. When this happens you’ll get `401` responses
+The client app needs to request an Access Token from the server.
+Access tokens expire in *one hour*. When this happens you’ll get `401` error responses.
 
 Most *access token grant* responses (Implicit and JWT excluded) therefore include a *refresh token* that can then be used to generate a new *access token*, without the need for end user participation
+
+For more details on the OAuth2 flow, please see:
+
+- [Auth flow](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Auth-flow.md)
+- [Auth flow steps](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Flow-steps.md)
+- [Extra-protection](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Extra-protection.md)
 
 ## Register an API consumer
 
@@ -34,26 +39,19 @@ When using Basic Auth, the `consumerKey` is the *user* and the `consumerSecret` 
 
 The `consumerKey` also acts as the client id (ie. `appName` or `client_id`)
 
-## Auth0 auth
-
-[Auth0 for bitbucket](https://auth0.com/docs/connections/social/bitbucket) is another option.
-
-[Auth0](https://auth0.com/) works for a client app that does the authentication handshake using the browser. The app can store the JWT/access token in `localstorage`.
-The token is piggy-backed on the request header on each request to the server.
-
 ## Auth Callback handler
 
 When the end user approves permission for the app (as per browser redirect to bitbucket authorization page), bitbucket will call the configured callback (as defined on the bitbucket OAuth configuration page - see above).
 
-A sample [express server](https://expressjs.com/) can be found in the `/server` folder which you can use to test this callback auth flow.
+## Creating a client app
 
-Simply create an app in the bitbucket OAuth config page (under account settings) and set the callback to `http://localhost:3000/authenticated`
+- Create an app in the bitbucket OAuth config page (under account settings)
+- Set the callback to a pre-defined routed, such as `http://localhost:3000/authenticated`
+- Create a client app and include this package
 
-Create a client/browser app, include this package (create a bundle via webpack, browserify or similar?).
+Follow the Advanced OAuth2 flow guides available in the [/docs](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs) folder
 
-Create an API instance as usual, then call the `authorizeOAuth2` API method to trigger the browser redirect to the bitbucket OAuth2 authentication page.
-
-When permissions are approved, the server should trigger a callback of the uri/route (such as `http://localhost:3000/authenticated`)
+A sample [express server](https://expressjs.com/) acting as a client app can be found in the `/client` folder. You can use this as a starting point to test the full OAuth2 flow with the Bitbucket Authorization server.
 
 ## Managing (token) secrets
 
@@ -67,6 +65,13 @@ Please note that `test/secret/access-tokens.json` has been added to `.npmignore`
   "secret": "1djJwEd3fU4ptVut9QRPz6zjAxfUNqLA"
 }
 ```
+
+## Auth0 auth
+
+[Auth0 for bitbucket](https://auth0.com/docs/connections/social/bitbucket) is another option.
+
+[Auth0](https://auth0.com/) works for a client app that does the authentication handshake using the browser. The app can store the JWT/access token in `localstorage`.
+The token is piggy-backed on the request header on each request to the server.
 
 ## Bitbucket Cloud JWT Grant (urn:bitbucket:oauth2:jwt)
 
@@ -112,7 +117,7 @@ try {
   let result = await connection
     .post('site/oauth2/access_token')
     .header({
-      'Authorization': `JWT ${accessToken}`
+      'Authorization': `Bearer ${accessToken}`
     })
     .field('grant_type', 'urn:bitbucket:oauth2:jwt')
 catch (err) {

@@ -101,6 +101,7 @@ function getTokens(opts = {}) {
   const {
     username,
     password,
+    redirectUri,
     refreshToken,
   } = opts
 
@@ -112,7 +113,8 @@ function getTokens(opts = {}) {
     payload = {
       grant_type: 'password',
       username,
-      password
+      password,
+      redirectUri,
     }
     errorMessageOn401 += ' Bad username/password?'
     log('prepared for Basic auth', {

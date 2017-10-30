@@ -131,6 +131,10 @@ function handleSuccess(opts = {}) {
   } = opts
   storage = storage || {}
   const log = (logger || defaults.logger)('handleSuccess', opts)
+  const {
+    refresh_token,
+    access_token
+  } = body
   var newConfig = Object.assign(config, {
     refreshToken: body.refresh_token
   })
@@ -139,7 +143,10 @@ function handleSuccess(opts = {}) {
   if (saveToStorage) {
     saveToStorage(newConfig, opts)
   }
-  resolve(body.access_token)
+  resolve({
+    access_token,
+    refresh_token
+  })
 }
 
 
