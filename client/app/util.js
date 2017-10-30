@@ -1,5 +1,10 @@
-var url = require('url');
-var __ = require('underscore');
+const {
+  log,
+  error
+} = console
+
+const url = require('url');
+const __ = require('underscore');
 const randomstring = require('randomstring')
 
 function buildUrl(base, options, hash) {
@@ -40,7 +45,6 @@ class AuthState {
     return this.authState
   }
 }
-
 
 module.exports = {
   buildUrl,
