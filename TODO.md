@@ -12,6 +12,12 @@ The grant types available for the browser (ie. front-flow only, such as implicit
 
 The `/client` folder needs some major work in order to provide sample clients and parts that are ready for real life action!!
 
+### Improve Express app w promises and router
+
+We could/should improve the Express sample client app with Promise support and use a (proper) Router
+
+- [express-promise](https://github.com/luin/express-promise)
+- [express-promise-router](https://www.npmjs.com/package/express-promise-router)
 
 ## Call for help
 
