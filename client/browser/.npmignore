@@ -1,0 +1,7 @@
+node_modules
+test
+docs
+webpack
+*.log
+*.tmp
+.babelrc
