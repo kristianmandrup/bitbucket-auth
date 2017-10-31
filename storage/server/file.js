@@ -1,6 +1,6 @@
 import {
   BaseStorage
-} from './base'
+} from '.'
 import {
   promisify
 } from 'util'

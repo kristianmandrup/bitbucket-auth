@@ -2,7 +2,9 @@
 
 Bitbucket API OAuth2 token authentication and storage.
 
-See [Advanced-auth](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Advanced-auth.md) for more info on bitbucket API authentication.
+See [oauth on bitbucketcloud](https://confluence.atlassian.com/bitbucket/oauth-on-bitbucket-cloud-238027431.html)
+
+For a more detailed break down and usage guide, see the [Advanced auth](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Advanced-auth.md) document (in `/docs`)
 
 ## Additional OAuth2 Resources
 
@@ -11,7 +13,7 @@ These resources will provide a much deeper understanding of all the mechanics be
 - Book: [OAuth2 in Action](https://www.manning.com/books/oauth-2-in-action)
 - [Auth flow](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Auth-flow.md)
 - [Auth flow steps](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Flow-steps.md)
-- [Extra-protection](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Extra-protection.md)
+- [Notes on protection measures](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Extra-protection.md)
 
 I highly recommend buying and reading the book, but these resources will (hopefully) get you started. Also check out the sample client apps (see below)
 
@@ -125,9 +127,12 @@ A simple filestorage is made available in `/storage` for your convenience., whic
 
 ### Client app (server)
 
-A sample client express app can be found in the `/client/app` folder and be used as a baseline to build on.
+Sample clients such as an express app can be found in the `/client` folder. These clients can be used as inspiration and baselines to build on...
 
-Note that this client app is WIP and has not yet been tested. Please help make it better!
+Note that the client apps are WIP and has not yet been tested.
+Please help make them better!
+
+Sample code from express client app:
 
 ```js
 // handle bitbucket authorization callback by authorization server
@@ -165,7 +170,7 @@ app.get('/authenticated', (request, response) => {
 })
 ```
 
-A full (generic) sample client for OAuth2 can be found in `/client/sample.js` (from the awesome book [OAuth2 in Action](https://www.manning.com/books/oauth-2-in-action).
+Full (generic) sample clients for OAuth2 can be found in `/client/generic`, from the awesome book [OAuth2 in Action](https://www.manning.com/books/oauth-2-in-action) that we recommend you buy to fully understand the OAuth2 mechanics, including each of the different grant flows.
 
 ## Bitbucket API v2
 

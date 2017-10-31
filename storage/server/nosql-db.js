@@ -1,6 +1,6 @@
 import {
   BaseStorage
-} from './base'
+} from '.'
 
 export class NoSqlDbStorage extends BaseStorage {
   constructor(opts) {
