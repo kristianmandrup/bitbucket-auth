@@ -42,7 +42,7 @@ function createAuthenticated(config = {}) {
       // result contains accessToken and refreshToken
       accessToken = result.accessToken
       // redirect to some page?
-    }).error(err => {
+    }).catch(err => {
       // TODO: use getAccessToken with forceCredentials?
       // potentially regenerate auth state?
       // authState.generate()

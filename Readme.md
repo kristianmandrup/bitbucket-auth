@@ -163,7 +163,7 @@ app.get('/authenticated', (request, response) => {
 
     // return accessToken to web app for use
     // perhaps store token in browser localstorage for typical JWT flow
-  }).error(err => {
+  }).catch(err => {
     // accessToken likely expired
     // use refreshToken to request a fresh accessToken
   })
