@@ -11,6 +11,7 @@ For more details on the OAuth2 flow, please see:
 
 - [Auth flow](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Auth-flow.md)
 - [Auth flow steps](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Flow-steps.md)
+- [Grant types](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Grant-types.md)
 - [Extra-protection](https://github.com/kristianmandrup/bitbucket-auth/blob/master/docs/Extra-protection.md)
 
 ## Register an API consumer
