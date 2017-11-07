@@ -89,7 +89,10 @@ Please note that the `BitBucketClient` is still untested and ripe for improvemen
 
 ## SampleBitBucketClient
 
-A `SampleBitBucketClient` example is included for reference. It should more or less be suitable for the `index.html` that can be found here.
+A `SampleBitBucketClient` example is included for reference under `test/app`.
+This client should be suitable for the `index.html` app that can be found there.
+
+We will test it via [Nightmare](https://github.com/segmentio/nightmare#api) headless browser E2E testing. We will mock bitbucket responses.
 
 The `init` method configures the HTML DOM elements with onClick handlers (assuming jQuery is loaded and available as `$`)
 

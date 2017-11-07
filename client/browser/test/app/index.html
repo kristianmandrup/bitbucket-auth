@@ -48,9 +48,10 @@
       <p>Access token value:
         <span class="label label-danger oauth-access-token"></span>
       </p>
-      <button class="btn btn-default oauth-authorize" type="button">Get OAuth Token</button>
-      <button class="btn btn-default oauth-fetch-resource" data-method="get" data-resource="repos/username/reponame" type="button">Get Repo: username/reponame</button>
-      <button class="btn btn-default oauth-fetch-resource" data-method="get" data-resource="users/username" type="button">Get user: username</button>
+      <button id="authorize" class="btn btn-default oauth-authorize" type="button">Get OAuth Token</button>
+      <button id="fetch-repo" class="btn btn-default oauth-fetch-resource" data-method="get" data-resource="repos/username/reponame"
+        type="button">Get Repo: username/reponame</button>
+      <button id="fetch-user" class="btn btn-default oauth-fetch-resource" data-method="get" data-resource="users/username" type="button">Get user: username</button>
     </div>
     <div class="jumbotron">
       <h2>Data from protected resource:</h2>
@@ -66,7 +67,35 @@
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-  <script src="dist/sample-client.js"></script>
+  <script src="sample-client.js"></script>
+  <script>
+    (function () {
+
+      function createBitbucketClient(opts = {}) {
+        opts = Object.assign(opts, {
+          $ // assuming jQuery is loaded, use by default
+        })
+        bbClient = new SampleBitBucketClient(opts)
+        bbClient.init()
+        return bbClient
+      }
+
+      const bitBucketClient = createBitbucketClient({
+        client
+      })
+
+      // authorize via redirect to bitbucket authorize page
+      bitBucketClient
+        .authorize()
+
+      // later
+      bitBucketClient.fetchResource({
+        resourceUrl,
+        method
+      })
+
+    })()
+  </script>
 </body>
 
 </html>

@@ -25,6 +25,7 @@ export class SampleBitBucketClient {
     if (location.hash) {
       this.processCallback();
     }
+    return this
   }
 
   get defaultMethod() {
