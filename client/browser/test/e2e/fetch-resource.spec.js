@@ -7,19 +7,33 @@ test.beforeEach(done => {
   nightmare = new Nightmare()
 })
 
+const repo = {
+  name: 'my-repo',
+  // ...
+}
+
+const user = {
+  name: 'my-user',
+  // ...
+}
+
+const expected = {
+  repo,
+  user
+}
+
 test('fecth repo resource', async t => {
   // mock ajax response with repo data
-
   const data = await nightmare
     .goto('http://localhost:3000')
     .click('#fetch-repo')
-
-  const expected = {
-    name: 'my-repo',
-    // ...
-  }
-
-  t.deepEqual(data, expected)
+    .wait('#repo')
+    .evaluate(() => document.querySelector('#repo').text)
+    .end()
+    // test repo received
+    .then(repo => {
+      t.deepEqual(repo, expected.repo)
+    })
 })
 
 test('fecth user resource', async t => {
@@ -28,12 +42,11 @@ test('fecth user resource', async t => {
   const data = await nightmare
     .goto('http://localhost:3000')
     .click('#fetch-user')
-    .wait('.oauth-protected-resource')
-
-  const expected = {
-    name: 'my-user',
-    // ...
-  }
-
-  t.deepEqual(data, expected)
+    .wait('#user')
+    .evaluate(() => document.querySelector('#user').text)
+    .end()
+    // test user received
+    .then(user => {
+      t.deepEqual(user, expected.user)
+    })
 })
