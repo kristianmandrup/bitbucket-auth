@@ -22,6 +22,7 @@ function sendRequest(opts = {}) {
     payload
   })
   return new Promise(function (resolve, reject) {
+    // https://bitbucket.org/site/oauth2/access_token
     const uri = `https://${domain}/site/oauth2/access_token`
     const handlerOpts = Object.assign(opts, {
       config,

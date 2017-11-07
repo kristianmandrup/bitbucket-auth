@@ -4,7 +4,7 @@ const merge = require('webpack-merge')
 
 let config = merge.smart(common, {
   output: {
-    filename: 'bundle.prod.js'
+    filename: 'bitbucket-client.prod.js'
   },
   plugins: [
     new BabiliPlugin(),

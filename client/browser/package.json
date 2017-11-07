@@ -1,6 +1,12 @@
 {
   "name": "bitbucket-auth-browser-client",
   "version": "0.0.1",
+  "main": "src/index.js",
+  "scripts": {
+    "build:prod": "webpack --progress --colors --display-error-details --env=prod",
+    "build:dev": "webpack --progress --colors --display-error-details --env=dev",
+    "build": "npm run build:dev && npm run build:prod"
+  },
   "devDependencies": {
     "supertest": "3.0.0",
     "ava": "^0.22.0",
