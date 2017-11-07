@@ -8,7 +8,8 @@ export class BitBucketClient {
     const {
       client,
       $,
-      ajax
+      ajax,
+      logging
     } = opts
     if (!client) {
       this.validationErr('BitBucketClient must take a client option (Object)', opts)
@@ -16,10 +17,21 @@ export class BitBucketClient {
     if (client.redirect_uri) {
       client.redirect_uris = [client.redirect_uri]
     }
+    this.logging = logging
     this.client = this.validateClientConfig(client)
     this.$ = $
     this.ajax = ajax || $.ajax
     this.callbackData = null
+  }
+
+  log(...msgs) {
+    if (this.logging) {
+      console.log(...msgs)
+    }
+  }
+
+  error(...msgs) {
+    console.error(...msgs)
   }
 
   get clientRequiredKeys() {
@@ -27,6 +39,7 @@ export class BitBucketClient {
   }
 
   validateClientConfig(client) {
+    this.log('validateClientConfig', config)
     this.clientRequiredKeys.map(key => {
       if (!client[key]) {
         this.validationErr(`missing ${key}`, client)
@@ -44,7 +57,7 @@ export class BitBucketClient {
   }
 
   validationErr(msg, data) {
-    console.error(msg, data)
+    this.error(msg, data)
     throw new Error(msg)
   }
 
@@ -54,39 +67,53 @@ export class BitBucketClient {
     }
   }
 
-  generateState(len) {
-    let ret = '';
+  generateState(length) {
+    this.log('generateState', length)
+    let state = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (var i = 0; i < len; i++) {
+    for (var i = 0; i < length; i++) {
       // add random character
-      ret += possible.charAt(Math.floor(Math.random() * possible.length));
+      state += possible.charAt(Math.floor(Math.random() * possible.length));
     }
-    return ret;
+    return state;
   }
 
-  handleAuthorizationRequestClick = (ev) => {
+  authorize() {
+    this.log('authorize')
     const state = this.generateState(32);
     this.state = state
 
     // save local state (by default in localstorage)
     this.localState = state
 
-    location.href = authServer.authorizationEndpoint + '?' +
+    const {
+      scope,
+      client_id,
+      redirect_uris,
+      redirect_uri
+    } = this.client
+
+    const {
+      authorizationEndpoint
+    } = this.authServer
+
+    location.href = authorizationEndpoint + '?' +
       'response_type=token' +
       '&state=' + state +
-      '&scope=' + encodeURIComponent(client.scope) +
-      '&client_id=' + encodeURIComponent(client.client_id) +
-      '&redirect_uri=' + encodeURIComponent(client.redirect_uris[0] || client.redirect_uri);
+      '&scope=' + encodeURIComponent(scope) +
+      '&client_id=' + encodeURIComponent(client_id) +
+      '&redirect_uri=' + encodeURIComponent(redirect_uris[0] || redirect_uri);
   }
 
-  buildAjaxObj(data = {}) {
+  buildRequestObj(data = {}) {
+    this.log('requestObj', data)
     const {
       callbackData,
       resourceUrl,
       method
     } = data
-    return {
+    const requestObj = {
       url: resourceUrl,
       type: 'POST',
       crossDomain: true,
@@ -95,6 +122,8 @@ export class BitBucketClient {
         'Authorization': 'Bearer ' + callbackData.access_token
       }
     }
+    this.log('request', requestObj)
+    return requestObj
   }
 
   fetchResource = ({
@@ -108,11 +137,12 @@ export class BitBucketClient {
     } = this
 
     if (callbackData != null) {
-      const requestObj = this.buildAjaxObj({
+      const requestObj = this.buildRequestObj({
         resourceUrl,
         method,
         callbackData
       })
+      this.log('make ajax request')
       ajax(requestObj).done(function (data) {
         this.onSuccess(data)
       }).fail(function () {
@@ -123,11 +153,11 @@ export class BitBucketClient {
   }
 
   onFailure() {
-    console.error('fetchResource: Failure')
+    this.error('fetchResource: Failure')
   }
 
   onSuccess(data) {
-    console.log('fetchResource: Succes', JSON.stringify(data))
+    this.log('fetchResource: Succes', JSON.stringify(data))
   }
 
   get whitelist() {
@@ -135,6 +165,7 @@ export class BitBucketClient {
   }
 
   processCallback = () => {
+    this.log('processCallback')
     const {
       $,
     } = this
@@ -142,12 +173,12 @@ export class BitBucketClient {
       callbackData
     } = this
 
-    var h = location.hash.substring(1);
-
+    var hash = location.hash.substring(1);
 
     callbackData = {};
 
-    h.split('&').forEach(function (e) {
+    this.log('parse location.hash', hash)
+    hash.split('&').forEach(function (e) {
       var d = e.split('=');
       var key = d[0]
       var value = d[1]
@@ -183,11 +214,11 @@ export class BitBucketClient {
 
 
   onStateMatch(callbackData) {
-    console.log('access_token: ', callbackData.access_token);
+    this.log('access_token: ', callbackData.access_token);
   }
 
   onStateMismatch() {
-    console.log('State DOES NOT MATCH: expected %s got %s', this.localState, callbackData.state);
+    this.log('State DOES NOT MATCH: expected %s got %s', this.localState, callbackData.state);
     this.callbackData = null;
   }
 }
