@@ -54,3 +54,25 @@ const bitBucketClient = new BitBucketClient({
 ```
 
 Please note that the `BitBucketClient` is still untested and ripe for improvement, with more fine grained functions/handlers etc. to make it easier to customize as needed.
+
+## SampleBitBucketClient
+
+A `SampleBitBucketClient` example is included for reference. It should more or less be suitable for the `index.html` that can be found here.
+
+The `init` method configures the HTML DOM elements with onClick handlers (assuming jQuery is loaded and available as `$`)
+
+- `oauth-authorize` click triggers `handleAuthorizationRequestClick`
+- `oauth-fetch-resource` click trigger `handleFetchResourceClick`
+
+In this example, you can simply set `data-resource="repos/username/reponame" data-method="post"` to point to the bitbucket API endpoint and `method` to the HTTP method you want to use to interact with that endpoint (default: `post`).
+
+```html
+<button class="btn btn-default oauth-authorize" type="button">Get OAuth Token</button>
+<button class="btn btn-default oauth-fetch-resource" data-resource="repos/username/reponame" type="button">Get Protected Resource</button>
+```
+
+See `sample.html` for a simple sample app using sample.
+
+Note: You will likely need to add `sample.js` as an additional webpack entry/output or similar so that you can load it in the html page as: `<script src="dist/sample-client.js"></script>`.
+
+You can extend and customize this sample as you see fit.

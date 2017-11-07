@@ -54,23 +54,6 @@ export class BitBucketClient {
     }
   }
 
-  execute() {
-    const {
-      $
-    } = this
-    // fill placeholder on UI
-    $('.oauth-scope-value').text(this.client.scope);
-
-    // UI button click handler
-    $('.oauth-authorize').on('click', this.handleAuthorizationRequestClick);
-    $('.oauth-fetch-resource').on('click', this.handleFetchResourceClick);
-
-    // we got a hash as a callback
-    if (location.hash) {
-      this.processCallback();
-    }
-  }
-
   generateState(len) {
     let ret = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -86,7 +69,8 @@ export class BitBucketClient {
     const state = this.generateState(32);
     this.state = state
 
-    localStorage.setItem('oauth-state', state);
+    // save local state (by default in localstorage)
+    this.localState = state
 
     location.href = authServer.authorizationEndpoint + '?' +
       'response_type=token' +
@@ -96,7 +80,27 @@ export class BitBucketClient {
       '&redirect_uri=' + encodeURIComponent(client.redirect_uris[0] || client.redirect_uri);
   }
 
-  handleFetchResourceClick = (ev) => {
+  buildAjaxObj(data = {}) {
+    const {
+      callbackData,
+      resourceUrl,
+      method
+    } = data
+    return {
+      url: resourceUrl,
+      type: 'POST',
+      crossDomain: true,
+      dataType: 'json',
+      headers: {
+        'Authorization': 'Bearer ' + callbackData.access_token
+      }
+    }
+  }
+
+  fetchResource = ({
+    resourceUrl,
+    method
+  }) => {
     const {
       $,
       ajax,
@@ -104,15 +108,12 @@ export class BitBucketClient {
     } = this
 
     if (callbackData != null) {
-      ajax({
-        url: this.protectedResource,
-        type: 'POST',
-        crossDomain: true,
-        dataType: 'json',
-        headers: {
-          'Authorization': 'Bearer ' + callbackData.access_token
-        }
-      }).done(function (data) {
+      const requestObj = this.buildAjaxObj({
+        resourceUrl,
+        method,
+        callbackData
+      })
+      ajax(requestObj).done(function (data) {
         this.onSuccess(data)
       }).fail(function () {
         this.onFailure()
@@ -122,11 +123,15 @@ export class BitBucketClient {
   }
 
   onFailure() {
-    $('.oauth-protected-resource').text('Error while fetching the protected resource');
+    console.error('fetchResource: Failure')
   }
 
   onSuccess(data) {
-    $('.oauth-protected-resource').text(JSON.stringify(data));
+    console.log('fetchResource: Succes', JSON.stringify(data))
+  }
+
+  get whitelist() {
+    return ['access_token', 'state']; // for parameters
   }
 
   processCallback = () => {
@@ -138,7 +143,7 @@ export class BitBucketClient {
     } = this
 
     var h = location.hash.substring(1);
-    var whitelist = ['access_token', 'state']; // for parameters
+
 
     callbackData = {};
 
@@ -146,28 +151,43 @@ export class BitBucketClient {
       var d = e.split('=');
       var key = d[0]
       var value = d[1]
-      if (whitelist.indexOf(key) > -1) {
+      // process whitelisted params of result
+      if (this.whitelist.indexOf(key) > -1) {
         // set callbackData.state = state and more ...
         callbackData[key] = value;
       }
     });
 
-    if (callbackData.state !== localStorage.getItem('oauth-state')) {
+    if (callbackData.state !== this.localState) {
       this.onStateMismatch()
     } else {
       onStateMatch(callbackData)
     }
   }
 
+  get oauthStateKey() {
+    return 'oauth-state'
+  }
+
+  get storage() {
+    return localStorage
+  }
+
+  get localState() {
+    return this.storage.getItem(this.oauthStateKey)
+  }
+
+  set localState(state) {
+    this.storage.setItem(this.oauthStateKey, state);
+  }
+
+
   onStateMatch(callbackData) {
-    $('.oauth-access-token').text(callbackData.access_token);
     console.log('access_token: ', callbackData.access_token);
   }
 
   onStateMismatch() {
-    console.log('State DOES NOT MATCH: expected %s got %s', localStorage.getItem('oauth-state'), callbackData.state);
+    console.log('State DOES NOT MATCH: expected %s got %s', this.localState, callbackData.state);
     this.callbackData = null;
-    $('.oauth-protected-resource').text("Error state value did not match");
   }
-
 }
