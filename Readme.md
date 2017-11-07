@@ -230,6 +230,54 @@ The callback includes the `?code={}` query parameter that you can swap for an ac
 
 You can then use this access token as an authentication `Bearer` token for subsequent requests.
 
+You can find a sample `BitbucketClient` class under the `/client/browser` folder.
+
+See the [Browser client](https://github.com/kristianmandrup/bitbucket-auth/blob/master/client/browserBrowser-client.md) document for more details. It uses localstorage to maintain the `state` (ie. "session secret").
+
+Sample Bitbucket in-browser client setup:
+
+```js
+var client = {
+  // client id (key) from bitbucket OAuth setings
+  'client_id': 'my-oauth-client',
+  // your own server callback (which bitbucket will call on successfull authorization)
+  'redirect_uri': 'http://localhost:9000/my-oauth-client/callback',
+  // use real scopes from bitbucket OAuth setings (if available)
+  'scope': 'foo bar'
+};
+class MyBitBucketClient extends BitBucketClient {
+  handleFetchResourceClick() {
+    // custom fun
+  }
+
+  init() {
+    // initialize
+    return this
+  }
+}
+
+function createBitbucketClient(opts = {}) {
+  opts = Object.assign(opts, {
+    $ // assuming jQuery is loaded, use by default
+  })
+  return new MyBitBucketClient(opts).init()
+}
+
+const bitBucketClient = createBitbucketClient({
+  client
+})
+
+// authorize via redirect to bitbucket authorize page
+bitBucketClient
+  .authorize()
+
+// later
+bitBucketClient.fetchResource({
+  resourceUrl,
+  method
+})
+```
+
 ## Testing
 
 Test are written and run using [ava](https://github.com/avajs/ava)

@@ -54,6 +54,7 @@ export class BitBucketClient {
     if (!Array.isArray(client.redirect_uris)) {
       this.validationErr(`redirect_uris must be an Array`, client.redirect_uris)
     }
+    return client
   }
 
   validationErr(msg, data) {
@@ -104,6 +105,8 @@ export class BitBucketClient {
       '&scope=' + encodeURIComponent(scope) +
       '&client_id=' + encodeURIComponent(client_id) +
       '&redirect_uri=' + encodeURIComponent(redirect_uris[0] || redirect_uri);
+
+    return this
   }
 
   buildRequestObj(data = {}) {
@@ -148,8 +151,8 @@ export class BitBucketClient {
       }).fail(function () {
         this.onFailure()
       });
-
     }
+    return this
   }
 
   onFailure() {
