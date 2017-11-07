@@ -18,7 +18,7 @@ export class SampleBitBucketClient {
     $('.oauth-scope-value').text(this.client.scope);
 
     // UI button click handler
-    $('.oauth-authorize').on('click', this.handleAuthorizationRequestClick);
+    $('#authorize').on('click', this.handleAuthorizationRequestClick);
     $('.oauth-fetch-resource').on('click', this.handleFetchResourceClick);
 
     // we got a hash as a callback
@@ -57,28 +57,34 @@ export class SampleBitBucketClient {
 
     this.fetchResource({
       resource,
-      method
+      method,
+      target
     })
   }
 
-  onFailure() {
-    super.onFailure()
-    $('.oauth-protected-resource').text('Error while fetching the protected resource');
+  resourceDisplayElem(opts) {
+    const displayId = opts.target.id === 'fetch-repo' ? 'repo' : 'user'
+    return $('#' + displayId)
   }
 
-  onSuccess(data) {
-    super.onSuccess(data)
-    $('.oauth-protected-resource').text(JSON.stringify(data));
+  onFailure(opts) {
+    super.onFailure()
+    this.resourceDisplayElem(opts).text('Error while fetching the protected resource');
+  }
+
+  onSuccess(opts) {
+    super.onSuccess(opts)
+    this.resourceDisplayElem(opts).text(JSON.stringify(opts.data));
   }
 
   onStateMatch(callbackData) {
-    $('.oauth-access-token').text(callbackData.access_token);
+    $('#access_token').text(callbackData.access_token);
     this.log('access_token: ', callbackData.access_token);
   }
 
   onStateMismatch() {
     this.error('State DOES NOT MATCH: expected %s got %s', this.localState, callbackData.state);
     this.callbackData = null;
-    $('.oauth-protected-resource').text("Error state value did not match");
+    $('#state').text("Error state value did not match");
   }
 }

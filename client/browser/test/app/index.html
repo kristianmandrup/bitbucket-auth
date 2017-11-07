@@ -43,10 +43,10 @@
 
     <div class="jumbotron">
       <p>Scope value:
-        <span class="label label-danger oauth-scope-value"></span>
+        <span id="scope" class="label label-danger oauth-scope-value"></span>
       </p>
       <p>Access token value:
-        <span class="label label-danger oauth-access-token"></span>
+        <span id="#access_token" class="label label-danger oauth-access-token"></span>
       </p>
       <button id="authorize" class="btn btn-default oauth-authorize" type="button">Get OAuth Token</button>
       <button id="fetch-repo" class="btn btn-default oauth-fetch-resource" data-method="get" data-resource="repos/username/reponame"
@@ -54,8 +54,14 @@
       <button id="fetch-user" class="btn btn-default oauth-fetch-resource" data-method="get" data-resource="users/username" type="button">Get user: username</button>
     </div>
     <div class="jumbotron">
-      <h2>Data from protected resource:</h2>
-      <pre><span class="oauth-protected-resource"</pre>
+      <h2>Data from protected resources:</h2>
+      <pre><span id="repo" class="oauth-protected-resource"></span></pre>
+      <pre><span id="user" class="oauth-protected-resource"></span></pre>
+    </div>
+
+    <div class="jumbotron">
+      <h2>State:</h2>
+      <pre><span id="state"></span></pre>
     </div>
   </div>
   <!-- /.container -->

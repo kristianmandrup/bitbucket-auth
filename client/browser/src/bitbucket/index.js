@@ -129,10 +129,11 @@ export class BitBucketClient {
     return requestObj
   }
 
-  fetchResource = ({
-    resourceUrl,
-    method
-  }) => {
+  fetchResource = (opts) => {
+    const {
+      resourceUrl,
+      method
+    } = opts
     const {
       $,
       ajax,
@@ -147,19 +148,23 @@ export class BitBucketClient {
       })
       this.log('make ajax request')
       ajax(requestObj).done(function (data) {
-        this.onSuccess(data)
+        this.onSuccess({
+          resourceUrl,
+          method,
+          data
+        })
       }).fail(function () {
-        this.onFailure()
+        this.onFailure(opts)
       });
     }
     return this
   }
 
-  onFailure() {
-    this.error('fetchResource: Failure')
+  onFailure(opts) {
+    this.error('fetchResource: Failure', opts)
   }
 
-  onSuccess(data) {
+  onSuccess(opts) {
     this.log('fetchResource: Succes', JSON.stringify(data))
   }
 

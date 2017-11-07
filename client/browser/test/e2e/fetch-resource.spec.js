@@ -28,6 +28,7 @@ test('fecth user resource', async t => {
   const data = await nightmare
     .goto('http://localhost:3000')
     .click('#fetch-user')
+    .wait('.oauth-protected-resource')
 
   const expected = {
     name: 'my-user',

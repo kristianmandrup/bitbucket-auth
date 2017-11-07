@@ -13,6 +13,8 @@ test('authorize', async t => {
   await nightmare
     .goto('http://localhost:3000')
     .click('#authorize')
-
+    .wait('#access-token')
+    .evaluate(() => document.querySelector('#access-token').text)
+    .end()
   // test that we retrieve, check and store state in localstorage
 })
