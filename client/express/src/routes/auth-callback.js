@@ -35,17 +35,22 @@ function createAuthCallback(config = {}) {
     // Make a HTTP form encoded request and authenticate client using HTTP Basic Auth
     // Can be done using getAccessToken()
     // Will use refreshToken if available in storage
+
+    // TODO: should also send generated state and perhaps redirect_uri
     getAccessToken({
       appName: 'my-app',
       storage
     }).then(result => {
       // result contains accessToken and refreshToken
-      accessToken = result.accessToken
-      // redirect to some page?
+      let {
+        accessToken,
+        refreshToken
+      } = result
+      log('retrieved', result)
     }).catch(err => {
-      // TODO: use getAccessToken with forceCredentials?
-      // potentially regenerate auth state?
-      // authState.generate()
+      // regenerate auth state
+      log('ERROR: access_token could not be retrieved', err)
+      authState.generate()
     })
   }
 }

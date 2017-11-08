@@ -33,6 +33,10 @@ const payload = {
   }
 }
 
+function mockSuccess() {
+
+}
+
 async function simulateAuthCallback(payload) {
   return await request(app)
     .send(payload)
