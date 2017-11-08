@@ -3,8 +3,8 @@ const {
 } = require('./fetch-resource')
 
 const {
-  createAuthenticated
-} = require('./authenticated')
+  createAuthCallback
+} = require('./auth-callback')
 
 const {
   createAuthorize
@@ -13,6 +13,6 @@ const {
 
 module.exports = {
   createFetchResource,
-  createAuthenticated,
+  createAuthCallback,
   createAuthorize
 }

@@ -41,6 +41,10 @@ class AuthState {
     return this
   }
 
+  clear() {
+    this.authState = undefined
+  }
+
   get state() {
     return this.authState
   }

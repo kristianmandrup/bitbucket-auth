@@ -3,13 +3,13 @@ const {
   error
 } = console
 
-function createAuthenticated(config = {}) {
+function createAuthCallback(config = {}) {
   let {
     authState,
     accessToken
   } = config
 
-  return function authenticated(request, response) {
+  return function authCallback(request, response, next) {
     const {
       query
     } = request
@@ -17,7 +17,7 @@ function createAuthenticated(config = {}) {
       code,
       state
     } = query
-    log('authenticated', {
+    log('authorized by bitbucket', {
       query,
       code
     })

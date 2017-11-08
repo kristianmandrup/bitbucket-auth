@@ -17,7 +17,7 @@ function createAuthorize(config = {}) {
     accessToken
   } = config
 
-  return function authorize(req, res) {
+  return function authorize(req, res, next) {
     var authorizeUrl = buildUrl(authServer.authorizationUrl, {
       response_type: 'code',
       client_id: client.client_id,
