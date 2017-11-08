@@ -1,5 +1,9 @@
 import test from ava
 import Nightmare from './Nightmare'
+import {
+  port,
+  expected
+} from './_util'
 
 // ensure clean slate before each test
 let nightmare
@@ -11,14 +15,9 @@ function mock(fun, result) {
   // TODO
 }
 
-const expected = {
-  token: 'abc123',
-  state: 'Fds23tjt43rwqwHSG43sfERHJd643g'
-}
-
 async function simulatedAuthRedirect() {
   return await nightmare
-    .goto('http://localhost:3000')
+    .goto(`http://localhost:${port}`)
     .click('#authorize')
     // TODO: simulate 2 secs wait for redirect
     // is goto a valid redirect!?
@@ -34,7 +33,7 @@ test('authorize - receives access token', async t => {
     .end()
     // test access-token received
     .then(token => {
-      t.is(token, expected.token)
+      t.is(token, expected.authorize.token)
       done();
     })
   // test that we retrieve, check and store state in localstorage
@@ -49,7 +48,7 @@ test('authorize - receives state', async t => {
     .end()
     // test access-token received
     .then(state => {
-      t.is(state, expected.state)
+      t.is(state, expected.authorize.state)
       done();
     })
   // test that we retrieve, check and store state in localstorage

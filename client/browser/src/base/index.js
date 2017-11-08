@@ -1,9 +1,4 @@
-// var client = {
-//   'client_id': 'oauth-client-1',
-//   'redirect_uris': ['http://localhost:9000/callback'],
-//   'scope': 'foo bar'
-// };
-export class BitBucketClient {
+export class BaseAuthClient {
   constructor(opts = {}) {
     const {
       client,
@@ -24,6 +19,10 @@ export class BitBucketClient {
     this.callbackData = null
   }
 
+  get clientRequiredKeys() {
+    return ['client_id', 'redirect_uris', 'scope']
+  }
+
   log(...msgs) {
     if (this.logging) {
       console.log(...msgs)
@@ -32,10 +31,6 @@ export class BitBucketClient {
 
   error(...msgs) {
     console.error(...msgs)
-  }
-
-  get clientRequiredKeys() {
-    return ['client_id', 'redirect_uris', 'scope']
   }
 
   validateClientConfig(client) {
@@ -49,7 +44,7 @@ export class BitBucketClient {
       this.validationErr(`client_id must be a string`, client.client_id)
     }
     if (typeof client.sceope !== 'string') {
-      this.validationErr(`sceope must be a string`, client.scope)
+      this.validationErr(`scope must be a string`, client.scope)
     }
     if (!Array.isArray(client.redirect_uris)) {
       this.validationErr(`redirect_uris must be an Array`, client.redirect_uris)
@@ -60,12 +55,6 @@ export class BitBucketClient {
   validationErr(msg, data) {
     this.error(msg, data)
     throw new Error(msg)
-  }
-
-  get authServer() {
-    return {
-      authorizationEndpoint: 'https://bitbucket.org/site/oauth2/authorize'
-    }
   }
 
   generateState(length) {

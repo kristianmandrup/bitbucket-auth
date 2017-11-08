@@ -1,10 +1,20 @@
 import {
+  BaseAuthClient
+}
+from './base'
+import {
   BitBucketClient
 }
-from './bitbucket'
+from './bitbucket/client'
+import {
+  SampleClient
+}
+from './sample/client'
 
 export default BitBucketClient
 
 export {
-  BitBucketClient
+  BaseAuthClient,
+  BitBucketClient,
+  SampleClient
 }

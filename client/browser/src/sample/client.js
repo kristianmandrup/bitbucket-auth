@@ -1,6 +1,6 @@
 import {
   BitBucketClient
-} from './'
+} from '../bitbucket/client'
 
 export class SampleBitBucketClient {
   constructor(opts = {}) {

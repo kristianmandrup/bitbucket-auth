@@ -46,11 +46,12 @@ A good function to override is `handleFetchResourceClick` which make the Ajax re
 ```js
 var client = {
   // client id (key) from bitbucket OAuth setings
-  'client_id': 'oauth-client-1',
-  // your own server callback (which bitbucket will call on successfull authorization)
-  'redirect_uris': ['http://localhost:9000/callback'],
+  client_id: 'oauth-client-1',
+  // your redirect uris which will be called on successfull authorization
+  // also supports multiple uris in redirect_uris:
+  redirect_uri: 'http://localhost:9000/callback',
   // use real scopes from bitbucket OAuth setings (if available)
-  'scope': 'foo bar'
+  scope: 'foo bar'
 };
 class MyBitBucketClient extends BitBucketClient {
   handleFetchResourceClick() {
@@ -71,7 +72,8 @@ function createBitbucketClient(opts = {}) {
 }
 
 const bitBucketClient = createBitbucketClient({
-  client
+  client,
+  logging: true // enable detailed logging
 })
 
 // authorize via redirect to bitbucket authorize page
@@ -111,3 +113,50 @@ See `sample.html` for a simple sample app using sample.
 Note: You will likely need to add `sample.js` as an additional webpack entry/output or similar so that you can load it in the html page as: `<script src="dist/sample-client.js"></script>`.
 
 You can extend and customize this sample as you see fit.
+
+### Testing
+
+See [UI testing with Nightmare](https://segment.com/blog/ui-testing-with-nightmare/)
+
+We use [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html) to build the code under test and serve it on a static file server.
+
+See [Webpack with Webpack Dev Server Configuration](https://www.youtube.com/watch?v=soI7X-7OSb4)
+
+We use [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) to generate the html page to be served. For more details see [this post](https://javascriptplayground.com/blog/2016/07/webpack-html-plugin/)
+
+Go to `localhost:8080/` to launch your app.
+
+The `webpack/webpack.common.js` contains the configuration for launching a web page with the bundled js. Note that we reference a template for the `html` file, ie. `templatePath`
+
+```js
+const rootPath = path.resolve(__dirname, '../')
+const distPath = path.resolve(__dirname, '../dist')
+const assetsPath = path.resolve(__dirname, '../assets')
+const indexPath = path.resolve(__dirname, '../src/index.js')
+const templatePath = path.resolve(__dirname, '../templates/sample.html')
+
+module.exports = {
+  // ...
+  devServer: {
+    contentBase: distPath,
+    hot: true,
+    // compress: true,
+    // filename: 'bundle.js',
+    // watchOptions: {
+    //   aggregateTimeout: 300,
+    //   poll: 1000
+    // },
+    // It's a required option.
+    // where to load extra assets from (root for the page)
+    publicPath: assetsPath,
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Sample Bitbucket Auth app',
+      // Load a custom template (lodash by default see the FAQ for details)
+      template: templatePath,
+    })
+  ],
+  // ...
+}
+```
