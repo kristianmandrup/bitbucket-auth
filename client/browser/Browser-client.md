@@ -50,7 +50,11 @@ You will likely want to subclass `BitBucketClient` to provide your own specializ
 A good function to override is `makeAjaxRequest(requestObj)` which make the Ajax requests and reacts to success/failure of the request.
 
 ```js
-var client = {
+const server = {
+  authorizeEndpoint: 'http://localhost:9000/my-auth-server/ouath2/authorize'
+}
+
+const client = {
   // client id (key) from bitbucket OAuth setings
   client_id: 'oauth-client-1',
   // your redirect uris which will be called on successfull authorization
@@ -60,6 +64,10 @@ var client = {
   scope: 'foo bar'
 };
 class MyBitBucketClient extends BitBucketClient {
+  constructor(opts = {}) {
+    super(opts)
+    this.authorizationEndpoint = server.authorizeEndpoint
+  }
   makeAjaxRequest(requestObj) {
     // custom fun to make request and call onSuccess or onFailure
   }
@@ -99,23 +107,23 @@ Please note that the `BitBucketClient` is still untested and ripe for improvemen
 
 ### Main API
 
-- `authorize()`
-- `fetchResource(opts)`
-- `makeAjaxRequest(requestObj)`
-- `buildRequestObj(data)`
+- `authorize()` perform authorization on configured `authorizationEndpoint`
+- `actOnResource(opts)` act on a given resource (resource API call)
+- `makeAjaxRequest(requestObj)` - make an Ajax request to authorize or act on a resource
+- `buildRequestObj(data)` build a request object used for Ajax request
+- `processCallback()` - process `location.hash` from callback, extract `state` and `access_token`
 
 ### Event handlers
 
-- `onFailure(opts)`
-- `onSuccess(opts)`
-- `processCallback()`
-- `onStateMatch(callbackData)`
-- `onStateMismatch()`
+- `onAjaxFailure(opts)` handle failed Ajax request
+- `onAjaxSuccess(opts)` handle succesful Ajax request
+- `onStateMatch(callbackData)` handle when state received matches generated state
+- `onStateMismatch()` handle state mismatch error
 
 ### Utility methods
 
-- `validateClientConfig(client)`
-- `generateState(length)`
+- `validateClientConfig(client)` validate client configuration object to be used
+- `generateState(length)` generate random state to act as session security (secret)
 
 ## SampleBitBucketClient
 
