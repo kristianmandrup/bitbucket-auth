@@ -17,6 +17,21 @@ export class BaseAuthClient {
     this.$ = $
     this.ajax = ajax || $.ajax
     this.callbackData = null
+    this.authorizationEndpoint = opts.authorizationEndpoint
+  }
+
+  handlError(msg, data) {
+    this.error(msg, data)
+    throw new Error(msg)
+  }
+
+  get authServer() {
+    if (!this.authorizationEndpoint) {
+      this.handlError('authServer: missing authorizationEndpoint')
+    }
+    return {
+      authorizationEndpoint: this.authorizationEndpoint
+    }
   }
 
   get clientRequiredKeys() {

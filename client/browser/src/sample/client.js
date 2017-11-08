@@ -10,16 +10,12 @@ export class SampleBitBucketClient {
 
   init() {
     this.log('init', this.constructor.name)
-
-    const {
-      $
-    } = this
     // fill placeholder on UI
-    $('.oauth-scope-value').text(this.client.scope);
+    this.select('.oauth-scope-value').text(this.client.scope);
 
     // UI button click handler
-    $('#authorize').on('click', this.handleAuthorizationRequestClick);
-    $('.oauth-fetch-resource').on('click', this.handleFetchResourceClick);
+    this.select('#authorize').on('click', this.handleAuthorizationRequestClick);
+    this.select('.oauth-fetch-resource').on('click', this.handleFetchResourceClick);
 
     // we got a hash as a callback
     if (location.hash) {
@@ -62,9 +58,17 @@ export class SampleBitBucketClient {
     })
   }
 
+  select(selector) {
+    return this.$(selector)
+  }
+
   resourceDisplayElem(opts) {
+    if (!(opts.target || opts.id)) {
+      this.handleError('resourceDisplayElem: missing event target or id', opts)
+    }
+    const id = opts.id || opts.target.id
     const displayId = opts.target.id === 'fetch-repo' ? 'repo' : 'user'
-    return $('#' + displayId)
+    return this.select('#' + displayId)
   }
 
   onFailure(opts) {
@@ -74,17 +78,18 @@ export class SampleBitBucketClient {
 
   onSuccess(opts) {
     super.onSuccess(opts)
-    this.resourceDisplayElem(opts).text(JSON.stringify(opts.data));
+    const prettyData = JSON.stringify(opts.data, null, 2)
+    this.resourceDisplayElem(opts).text(prettyData);
   }
 
   onStateMatch(callbackData) {
-    $('#access_token').text(callbackData.access_token);
+    this.select('#access_token').text(callbackData.access_token);
     this.log('access_token: ', callbackData.access_token);
   }
 
   onStateMismatch() {
     this.error('State DOES NOT MATCH: expected %s got %s', this.localState, callbackData.state);
     this.callbackData = null;
-    $('#state').text("Error state value did not match");
+    this.select('#state').text("Error state value did not match");
   }
 }

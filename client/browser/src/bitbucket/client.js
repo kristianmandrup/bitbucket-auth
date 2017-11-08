@@ -10,11 +10,6 @@ import {
 export class BitBucketClient extends BaseAuthClient {
   constructor(opts = {}) {
     super(opts)
-  }
-
-  get authServer() {
-    return {
-      authorizationEndpoint: 'https://bitbucket.org/site/oauth2/authorize'
-    }
+    this.authorizationEndpoint = 'https://bitbucket.org/site/oauth2/authorize'
   }
 }
