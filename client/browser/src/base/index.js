@@ -113,6 +113,18 @@ export class BaseAuthClient {
     return this
   }
 
+  get defaultHttpMethod() {
+    return 'POST'
+  }
+
+  get defaultRequestSettings() {
+    return {
+      type: this.defaultHttpMethod,
+      crossDomain: true,
+      dataType: 'json',
+    }
+  }
+
   buildRequestObj(data = {}) {
     this.log('requestObj', data)
     const {
@@ -120,15 +132,12 @@ export class BaseAuthClient {
       resourceUrl,
       method
     } = data
-    const requestObj = {
+    const requestObj = Object.assign(this.defaultRequestSettings, {
       url: resourceUrl,
-      type: 'POST',
-      crossDomain: true,
-      dataType: 'json',
       headers: {
         'Authorization': 'Bearer ' + callbackData.access_token
       }
-    }
+    })
     this.log('request', requestObj)
     return requestObj
   }
@@ -150,18 +159,28 @@ export class BaseAuthClient {
         method,
         callbackData
       })
-      this.log('make ajax request')
-      ajax(requestObj).done(function (data) {
-        this.onSuccess({
-          resourceUrl,
-          method,
-          data
-        })
-      }).fail(function () {
-        this.onFailure(opts)
-      });
+      this.log('make ajax request using', requestObj)
+      this.makeAjaxRequest(requestObj)
     }
     return this
+  }
+
+  makeAjaxRequest(requestObj) {
+    // Note: passes on original opts
+    // this is so it can take whatever info necessary for updating display
+    // such as the target DOM element of the event initiating it
+    // as used in the SampleClient example
+    this.ajax(requestObj).done((data) => {
+      const payload = Object.assign(opts, {
+        data
+      })
+      this.log('success', payload)
+      this.onSuccess(payload)
+    }).fail(() => {
+      const payload = opts
+      this.log('failure', payload)
+      this.onFailure(payload)
+    });
   }
 
   onFailure(opts) {

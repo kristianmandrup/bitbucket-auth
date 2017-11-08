@@ -20,6 +20,10 @@ You can use the pre-compiled bitbucket client distributions in your client app p
 - `bitbucket-auth/client/browser/dist/bitbucket-client.js`
 - `bitbucket-auth/client/browser/dist/bitbucket-client.prod.js`
 
+## API usage
+
+Client instantiation example
+
 ```js
 var client = {
   // client id (key) from bitbucket OAuth setings
@@ -29,19 +33,21 @@ var client = {
   // use real scopes from bitbucket OAuth setings (if available)
   'scope': 'foo bar'
 };
+const authorizationEndpoint = 'http://localhost:3000/auth-server/authorize'
+
 const $ = jQuery
 const ajax = $.ajax // or whatever you want to use to make XHR/Ajax requests
 const bitBucketClient = new BitBucketClient({
   client,
   $,
-  ajax
+  ajax,
+  authorizationEndpoint
 })
-bitBucketClient.execute()
 ```
 
-You will likely want to subclass `BitBucketClient` and provide your own specialized functionality...
+You will likely want to subclass `BitBucketClient` to provide your own specialized functionality.
 
-A good function to override is `handleFetchResourceClick` which make the Ajax requests and reacts to success/failure of result.
+A good function to override is `makeAjaxRequest(requestObj)` which make the Ajax requests and reacts to success/failure of the request.
 
 ```js
 var client = {
@@ -54,8 +60,8 @@ var client = {
   scope: 'foo bar'
 };
 class MyBitBucketClient extends BitBucketClient {
-  handleFetchResourceClick() {
-    // custom fun
+  makeAjaxRequest(requestObj) {
+    // custom fun to make request and call onSuccess or onFailure
   }
 
   init() {
@@ -88,6 +94,28 @@ bitBucketClient.fetchResource({
 ```
 
 Please note that the `BitBucketClient` is still untested and ripe for improvement, with more fine grained functions/handlers etc. to make it easier to customize as needed.
+
+## API overview
+
+### Main API
+
+- `authorize()`
+- `fetchResource(opts)`
+- `makeAjaxRequest(requestObj)`
+- `buildRequestObj(data)`
+
+### Event handlers
+
+- `onFailure(opts)`
+- `onSuccess(opts)`
+- `processCallback()`
+- `onStateMatch(callbackData)`
+- `onStateMismatch()`
+
+### Utility methods
+
+- `validateClientConfig(client)`
+- `generateState(length)`
 
 ## SampleBitBucketClient
 
