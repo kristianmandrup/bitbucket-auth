@@ -8,18 +8,30 @@ export class SampleBitBucketClient {
     this.init()
   }
 
+  addClickHandler(selector, handler) {
+    this.select('#authorize').on('click', this.handleAuthorizationRequestClick)
+  }
+
+  getText(selector) {
+
+  }
+
+  setText(selector, text) {
+    this.select(selector).text(text);
+  }
+
   init() {
     this.log('init', this.constructor.name)
     // fill placeholder on UI
-    this.select('.oauth-scope-value').text(this.client.scope);
+    this.setText('#scope', this.client.scope)
 
     // UI button click handler
-    this.select('#authorize').on('click', this.handleAuthorizationRequestClick);
-    this.select('.oauth-fetch-resource').on('click', this.handleFetchResourceClick);
+    this.addClickHandler('#authorize', this.handleAuthorizationRequestClick)
+    this.addClickHandler('.oauth-fetch-resource', this.handleFetchResourceClick)
 
     // we got a hash as a callback
     if (location.hash) {
-      this.processCallback();
+      this.processCallback()
     }
     return this
   }
@@ -73,23 +85,25 @@ export class SampleBitBucketClient {
 
   onFailure(opts) {
     super.onFailure()
-    this.resourceDisplayElem(opts).text('Error while fetching the protected resource');
+    const elem = this.resourceDisplayElem(opts)
+    elem.text('Error while fetching the protected resource');
   }
 
   onSuccess(opts) {
     super.onSuccess(opts)
     const prettyData = JSON.stringify(opts.data, null, 2)
-    this.resourceDisplayElem(opts).text(prettyData);
+    const elem = resourceDisplayElem(opts)
+    elem.text(prettyData)
   }
 
   onStateMatch(callbackData) {
-    this.select('#access_token').text(callbackData.access_token);
-    this.log('access_token: ', callbackData.access_token);
+    this.setText('#access_token', callbackData.access_token)
+    this.log('access_token: ', callbackData.access_token)
   }
 
   onStateMismatch() {
-    this.error('State DOES NOT MATCH: expected %s got %s', this.localState, callbackData.state);
-    this.callbackData = null;
-    this.select('#state').text("Error state value did not match");
+    this.error('State DOES NOT MATCH: expected %s got %s', this.localState, callbackData.state)
+    this.callbackData = null
+    this.setText('#state', 'Error state value did not match')
   }
 }
