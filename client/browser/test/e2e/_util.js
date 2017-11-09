@@ -1,3 +1,6 @@
+import test from 'ava'
+import Nightmare from 'nightmare'
+
 const repo = {
   name: 'my-repo',
   // ...
@@ -22,6 +25,8 @@ const expected = {
 const port = '8080'
 
 export {
+  test,
+  Nightmare,
   port,
   expected
 }

@@ -1,6 +1,6 @@
-import test from ava
-import Nightmare from './Nightmare'
 import {
+  test,
+  Nightmare,
   port,
   expected
 } from './_util'
@@ -11,7 +11,7 @@ test.beforeEach(done => {
   nightmare = new Nightmare()
 })
 
-function mock(fun, result) {
+function mockResponse(opts = {}) {
   // TODO
 }
 
@@ -26,7 +26,9 @@ async function simulatedAuthRedirect() {
 
 test('authorize - receives access token', async t => {
   // TODO: mock bitbucket redirect to callback uri...
-  mock($.ajax, 'abc123')
+  mockResponse({
+    body: 'abc123'
+  })
   await simulatedAuthRedirect()
     .wait('#access-token')
     .evaluate(() => document.querySelector('#access-token').text)
@@ -41,7 +43,10 @@ test('authorize - receives access token', async t => {
 
 test('authorize - receives state', async t => {
   // TODO: mock bitbucket redirect to callback uri...
-  mock($.ajax, 'abc123')
+  mockResponse({
+    body: 'abc123'
+  })
+
   await simulatedAuthRedirect()
     .wait('#state')
     .evaluate(() => document.querySelector('#state').text)

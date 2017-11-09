@@ -1,6 +1,6 @@
-import test from ava
-import Nightmare from './Nightmare'
 import {
+  test,
+  Nightmare,
   port,
   expected
 } from './_util'
