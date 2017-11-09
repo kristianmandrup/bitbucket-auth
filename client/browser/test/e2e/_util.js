@@ -1,4 +1,5 @@
 import test from 'ava'
+import nock from 'nock'
 import Nightmare from 'nightmare'
 
 const repo = {
@@ -25,6 +26,7 @@ const expected = {
 const port = '8080'
 
 export {
+  nock,
   test,
   Nightmare,
   port,

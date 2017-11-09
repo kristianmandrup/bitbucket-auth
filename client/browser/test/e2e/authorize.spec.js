@@ -1,4 +1,5 @@
 import {
+  nock,
   test,
   Nightmare,
   port,
@@ -11,26 +12,40 @@ test.beforeEach(done => {
   nightmare = new Nightmare()
 })
 
-function mockResponse(opts = {}) {
-  // TODO
+// defaults: same as callbackUrl
+// Equivalent to: http://localhost:3000/auth-callback?access_token=${expected.token}&state=${expected.state}
+const client = {
+  host: 'http://localhost:3000',
+  route: '/auth-callback',
+  query: {
+    access_token: expected.token,
+    state: expected.state
+  }
 }
 
-async function simulatedAuthRedirect() {
+function mockRequest(opts = {}) {
+  nock(opts.host || client.host)
+    .get(opts.route || client.route)
+    .query(opts.query || client.query)
+}
+
+async function simulatedAuthorize() {
   return await nightmare
     .goto(`http://localhost:${port}`)
     .click('#authorize')
-    // TODO: simulate 2 secs wait for redirect
-    // is goto a valid redirect!?
-    .goto(`http://localhost:3000?access_token=${expected.token}&state=${expected.state}`)
+}
+
+const callbackUrl = `http://localhost:3000/auth-callback?access_token=${expected.token}&state=${expected.state}`
+
+async function simulatedCallback() {
+  return await nightmare
+    .goto(callbackUrl)
 }
 
 test('authorize - receives access token', async t => {
-  // TODO: mock bitbucket redirect to callback uri...
-  mockResponse({
-    body: 'abc123'
-  })
-  await simulatedAuthRedirect()
-    .wait('#access-token')
+  // TODO: mock bitbucket redirect to callback uri... ??
+  await simulatedAuthorize()
+    .wait(1000)
     .evaluate(() => document.querySelector('#access-token').text)
     .end()
     // test access-token received
@@ -42,13 +57,9 @@ test('authorize - receives access token', async t => {
 })
 
 test('authorize - receives state', async t => {
-  // TODO: mock bitbucket redirect to callback uri...
-  mockResponse({
-    body: 'abc123'
-  })
-
+  // TODO: mock bitbucket redirect to callback uri... ??
   await simulatedAuthRedirect()
-    .wait('#state')
+    .wait(1000)
     .evaluate(() => document.querySelector('#state').text)
     .end()
     // test access-token received
