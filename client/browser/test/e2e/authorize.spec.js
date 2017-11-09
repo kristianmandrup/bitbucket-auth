@@ -6,66 +6,64 @@ import {
   expected
 } from './_util'
 
+import {
+  mockRequest,
+  callbackUrl,
+  indexPage
+} from './mock'
+
 // ensure clean slate before each test
 let nightmare
 test.beforeEach(done => {
   nightmare = new Nightmare()
 })
 
-// defaults: same as callbackUrl
-// Equivalent to: http://localhost:3000/auth-callback?access_token=${expected.token}&state=${expected.state}
-const client = {
-  host: 'http://localhost:3000',
-  route: '/auth-callback',
-  query: {
-    access_token: expected.token,
-    state: expected.state
-  }
-}
+// const authorize = nockConfig.authorize
+// const authorizeUrl = [authorize.host, authorize.route].join('/')
 
-function mockRequest(opts = {}) {
-  nock(opts.host || client.host)
-    .get(opts.route || client.route)
-    .query(opts.query || client.query)
-}
-
-async function simulatedAuthorize() {
+async function simulateAuthorize() {
+  mockRequest('authorize')
   return await nightmare
-    .goto(`http://localhost:${port}`)
+    // go to index.html page
+    .goto(indexPage)
+    // will trigger Ajax request to bitbucket.org
+    // this should be intercepted by nock to playback simulated browser response 302 (redirect)
     .click('#authorize')
+  // browser should now be redirected to page where access token can be parsed from query string of URL
 }
-
-const callbackUrl = `http://localhost:3000/auth-callback?access_token=${expected.token}&state=${expected.state}`
 
 async function simulatedCallback() {
+  mockRequest('callback')
   return await nightmare
     .goto(callbackUrl)
 }
 
 test('authorize - receives access token', async t => {
-  // TODO: mock bitbucket redirect to callback uri... ??
-  await simulatedAuthorize()
-    .wait(1000)
+  await simulateAuthorize()
+    .wait(500) // simulate server roundtrip
+    .end()
+
+  await simulatedCallback()
+    .wait(100) // allow time for browser to parse access_token and update page
     .evaluate(() => document.querySelector('#access-token').text)
     .end()
     // test access-token received
     .then(token => {
       t.is(token, expected.authorize.token)
-      done();
     })
-  // test that we retrieve, check and store state in localstorage
 })
 
 test('authorize - receives state', async t => {
-  // TODO: mock bitbucket redirect to callback uri... ??
-  await simulatedAuthRedirect()
-    .wait(1000)
+  await simulateAuthorize()
+    .wait(500) // simulate server roundtrip
+    .end()
+
+  await simulatedCallback()
+    .wait(100) // allow time for browser to parse access_token and update page
     .evaluate(() => document.querySelector('#state').text)
     .end()
     // test access-token received
     .then(state => {
       t.is(state, expected.authorize.state)
-      done();
     })
-  // test that we retrieve, check and store state in localstorage
 })

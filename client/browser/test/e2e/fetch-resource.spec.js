@@ -6,6 +6,11 @@ import {
   expected
 } from './_util'
 
+import {
+  mockRequest,
+  indexPage
+} from './mock'
+
 // ensure clean slate before each test
 let nightmare
 test.beforeEach(done => {
@@ -14,10 +19,12 @@ test.beforeEach(done => {
 
 test('fecth repo resource', async t => {
   // mock ajax response with repo data
+  mockRequest('fetchRepo')
+
   const data = await nightmare
-    .goto(`http://localhost:${port}`)
+    .goto(indexPage)
     .click('#fetch-repo')
-    .wait('#repo')
+    .wait(500) // simulate server roundtrip
     .evaluate(() => document.querySelector('#repo').text)
     .end()
     // test repo received
@@ -28,11 +35,12 @@ test('fecth repo resource', async t => {
 
 test('fecth user resource', async t => {
   // mock ajax response with user data
+  mockRequest('fetchUser')
 
   const data = await nightmare
-    .goto(`http://localhost:${port}`)
+    .goto(indexPage)
     .click('#fetch-user')
-    .wait('#user')
+    .wait(500) // simulate server roundtrip
     .evaluate(() => document.querySelector('#user').text)
     .end()
     // test user received
