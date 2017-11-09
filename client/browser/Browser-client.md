@@ -6,8 +6,6 @@ The client will be modelled on the generic browser client app, available under `
 
 ## Status
 
-For now we have simply copied over the generic client as `src/generic`.
-
 The generic sample has then been converted into a class `BitbucketClient` in `src/bitbucket`. We then use webpack with babel to compile it to ES5 in `/dist` to:
 
 - `bitbucket-client.js`
@@ -160,7 +158,9 @@ See [Webpack with Webpack Dev Server Configuration](https://www.youtube.com/watc
 
 We use [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) to generate the html page to be served. For more details see [this post](https://javascriptplayground.com/blog/2016/07/webpack-html-plugin/)
 
-Go to `localhost:8080/` to launch your app.
+We also have [webpack dashboard](https://medium.com/@wesharehoodies/webpack-dashboard-with-create-react-app-vue-cli-and-custom-configs-49166e1a69de) available.
+
+Go to `localhost:8080/` to launch your app or use the `hot` reload webpack configuration in place (will watch files and re-fresh browser on any change)
 
 The `webpack/webpack.common.js` contains the configuration for launching a web page with the bundled js. Note that we reference a template for the `html` file, ie. `templatePath`
 
