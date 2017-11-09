@@ -1,17 +1,5 @@
-# Bitbucket Auth browser client
+# Bitbucket browser client app
 
-TODO
+Contains a full in-browser client app that can authenticate with Bitbucket authorization server via OAuth2 using the implicit grant type flow.
 
-## Babel config
-
-You could try with the following...
-
-```json
-  "plugins": [
-    "transform-regenerator",
-    "transform-async-to-generator",
-    "transform-object-rest-spread",
-    "transform-class-properties",
-    "add-module-exports"
-  ]
-```
+See more details in [Browser-client](https://github.com/kristianmandrup/bitbucket-auth/blob/master/client/browser/Browser-client.md)

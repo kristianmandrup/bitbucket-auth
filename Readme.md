@@ -132,7 +132,7 @@ Sample clients such as an express app can be found in the `/client` folder. Thes
 Note that the client apps are WIP and has not yet been tested.
 Please help make them better!
 
-See the [Express client](https://github.com/kristianmandrup/bitbucket-auth/blob/master/client/express/Express client.md) document for more.
+See the [Express client](https://github.com/kristianmandrup/bitbucket-auth/blob/master/client/express/Express-client.md) document for more.
 
 Sample code from Express client app:
 

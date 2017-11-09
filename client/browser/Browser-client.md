@@ -1,8 +1,8 @@
 # Bitbucket browser client app
 
-This folder will contain a full in-browser client app that can authenticate with Bitbucket authorization server via OAuth2 using the implicit grant type flow.
+Contains a full in-browser client app that can authenticate with Bitbucket authorization server via OAuth2 using the implicit grant type flow.
 
-The client will be modelled on the generic browser client app, available under `/client/generic/browser` in this project.
+The client is modelled on the generic browser client app, available under `/client/generic/browser` in this project.
 
 ## Status
 
