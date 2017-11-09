@@ -36,7 +36,7 @@ function createAuthCallback(config = {}) {
     // Can be done using getAccessToken()
     // Will use refreshToken if available in storage
 
-    // TODO: should also send generated state and perhaps redirect_uri
+    // TODO: should we send redirectUri here as well?
     getAccessToken({
       appName: 'my-app',
       storage

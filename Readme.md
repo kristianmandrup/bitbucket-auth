@@ -132,11 +132,13 @@ Sample clients such as an express app can be found in the `/client` folder. Thes
 Note that the client apps are WIP and has not yet been tested.
 Please help make them better!
 
-Sample code from express client app:
+See the [Express client](https://github.com/kristianmandrup/bitbucket-auth/blob/master/client/express/Express client.md) document for more.
+
+Sample code from Express client app:
 
 ```js
 // handle bitbucket authorization callback by authorization server
-app.get('/authenticated', (request, response) => {
+app.get('/auth-callback', (request, response) => {
   const {
     query
   } = request
@@ -148,8 +150,9 @@ app.get('/authenticated', (request, response) => {
     code
   })
 
-  // Make a HTTP form encoded request and authenticate client using HTTP Basic Auth
-  // Can be done using getAccessToken()
+  // Make a HTTP form encoded request and authenticate client
+  // using HTTP Basic Auth
+  // achieved using getAccessToken()
   getAccessToken({
     appName: 'my-app',
     storage
