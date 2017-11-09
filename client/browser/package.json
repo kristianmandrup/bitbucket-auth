@@ -6,7 +6,9 @@
     "build:prod": "webpack --progress --colors --display-error-details --env=prod",
     "build:dev": "webpack --progress --colors --display-error-details --env=dev",
     "build": "npm run build:dev && npm run build:prod",
-    "dev": "webpack-dev-server --content-base build/"
+    "dev": "webpack-dev-server --content-base build/",
+    "start": "webpack-dashboard -- webpack-dev-server -d --hot --config webpack.config.js --watch",
+    "production": "NODE_ENV=production webpack -p"
   },
   "devDependencies": {
     "ava": "^0.22.0",
