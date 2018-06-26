@@ -1,8 +1,5 @@
 const request = require('superagent')
-
-import {
-  defaults
-} from './util'
+const { defaults } = require('./util')
 
 function sendRequest(opts = {}) {
   let {
